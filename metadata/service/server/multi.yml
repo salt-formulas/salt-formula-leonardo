@@ -1,0 +1,6 @@
+applications:
+- leonardo
+parameters:
+  leonardo:
+    server:
+      enabled: true

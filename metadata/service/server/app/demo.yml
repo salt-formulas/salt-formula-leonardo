@@ -1,0 +1,74 @@
+classes:
+- service.git.client
+- service.memcached.server.local
+- service.postgresql.server.local
+- service.python.environment
+- service.supervisor.server.single
+parameters:
+  _param:
+    nginx_leonardo_server_host: ${linux:network:fqdn}
+    leonardo_secret_key: secret
+    postgresql_leonardo_password: password
+    nginx_leonardo_host: leonardo.${linux:network:fqdn}
+  supervisor:
+    server:
+      service:
+        leonardo_demo:
+          name: demo
+          type: leonardo
+  leonardo:
+    server:
+      app:
+        demo:
+          enabled: true
+          workers: 3
+          bind:
+            address: 0.0.0.0 # ${linux:network:fqdn}
+            port: 9754
+            protocol: tcp
+          enabled: true
+          secret_key: ${_param:leonardo_secret_key}
+          source:
+            engine: git
+            address: git@repo1.robotice.cz:python-apps/django-leonardo.git
+            rev: develop
+          cache:
+            engine: 'memcached'
+            host: '127.0.0.1'
+            prefix: 'CACHE_leonardo'
+          database:
+            engine: postgres
+            host: 127.0.0.1
+            name: leonardo_demo
+            password: ${_param:postgresql_leonardo_password}
+            user: leonardo_demo
+          mail:
+            engine: console
+          robotice_api:
+            host: api.robotice.org
+            port: 9753
+          plugin:
+            eshop: {}
+            web: {}
+            blog: {}
+  postgresql:
+    server:
+      database:
+        leonardo_demo:
+          enabled: true
+          encoding: 'UTF8'
+          locale: 'cs_CZ'
+          users:
+          - name: leonardo_demo
+            password: ${_param:postgresql_leonardo_password}
+            host: localhost
+            rights: all privileges
+  nginx:
+    server:
+      site:
+        sentry_server:
+          enabled: true
+          type: leonardo
+          name: leonardo_demo
+          host:
+            name: ${_param:nginx_leonardo_server_host}

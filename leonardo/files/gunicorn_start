@@ -1,0 +1,27 @@
+#!/bin/bash
+{%- set app = salt['pillar.get']('leonardo:server:app:'+app_name) %}
+
+NAME="leonardo_{{ app_name }}"
+DJANGODIR=/srv/leonardo/sites/{{ app_name }}
+USER=leonardo
+GROUP=leonardo
+NUM_WORKERS={{ app.get('workers', 3) }}
+DJANGO_SETTINGS_MODULE=leonardo.settings
+DJANGO_WSGI_MODULE=wsgi
+
+echo "Starting $NAME as `whoami`"
+
+# Activate the virtual environment
+cd $DJANGODIR
+source /srv/leonardo/sites/{{ app_name }}/bin/activate
+export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+export PYTHONPATH=$DJANGODIR:$PYTHONPATH
+
+# Start your Django Unicorn
+# Programs meant to be run under supervisor should not daemonize themselves (do not use --daemon)
+exec /srv/leonardo/sites/{{ app_name }}/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
+  --name $NAME \
+  --workers $NUM_WORKERS \
+  --user=$USER --group=$GROUP \
+  --log-level=debug \
+  --bind={{ app.bind.address }}:{{ app.bind.port }}
