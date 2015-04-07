@@ -34,7 +34,7 @@ leonardo_{{ app_name }}_dirs:
 
 {{ server.repository }}:leonardo-sites/{{ app_name }}.git:
   git.latest:
-  - target: /srv/leonardo/sites/{{ app_name }}/sites
+  - target: /srv/leonardo/sites/{{ app_name }}/site
   - require:
     - file: /srv/leonardo/sites/{{ app_name }}
     - virtualenv: /srv/leonardo/sites/{{ app_name }}
