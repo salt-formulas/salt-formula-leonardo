@@ -70,7 +70,7 @@ TIME_ZONE = '{{ pillar.linux.system.timezone }}'
 LANGUAGE_CODE = 'en'
 
 APPS = [
-{%- for plugin_name, plugin in app.plugin.iteritems() %}
+{%- for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
     '{{ plugin_name }}',
 {%- endfor %}
 ]
