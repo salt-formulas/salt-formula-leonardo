@@ -76,7 +76,7 @@ APPS = [
 ]
 
 # SUPPORT FOR SPECIFIC APP CONFIG
-{%- for plugin_name, plugin in app.plugin.iteritems() %}
+{%- for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
 {%- if plugin.config is defined %}
 {{ plugin_name|upper }}_CONFIG = {{ plugin.config|python }}
 {%- endif %}
