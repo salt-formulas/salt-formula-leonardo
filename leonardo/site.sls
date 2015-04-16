@@ -15,6 +15,7 @@ leonardo_source_{{ app_name }}:
 /srv/leonardo/sites/{{ app_name }}:
   virtualenv.manage:
   - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements.txt
+  - env_vars: 'PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache'
   - require:
     - pkg: leonardo_packages
     - git: leonardo_source_{{ app_name }}
