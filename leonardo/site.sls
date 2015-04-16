@@ -122,7 +122,7 @@ sync_themes_{{ app_name }}:
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
-    - cmd: sync_themes_{{ app_name }}
+    - cmd: collect_static_{{ app_name }}
 
 {%- if app.initial_data is defined %}
 
