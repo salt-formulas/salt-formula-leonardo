@@ -102,7 +102,7 @@ sync_database_{{ app_name }}:
 
 migrate_database_{{ app_name }}:
   cmd.run:
-  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py migrate
+  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py migrate --noinput
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
