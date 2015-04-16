@@ -14,11 +14,23 @@ leonardo_source_{{ app_name }}:
 
 /srv/leonardo/sites/{{ app_name }}:
   virtualenv.manage:
-  - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements.txt
-  - env_vars: 'PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache'
+  - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/default.txt
+  - pip_download_cache: true
   - require:
     - pkg: leonardo_packages
     - git: leonardo_source_{{ app_name }}
+
+{% for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
+{% if not 'site' in plugin_name %}
+{{ plugin_name }}_{{ app_name }}_req:
+  pip.installed:
+    - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ plugin_name }}.txt
+    - bin_env: /srv/leonardo/sites/{{ app_name }}
+    - download_cache: true
+    - require:
+      - virtualenv: /srv/leonardo/sites/{{ app_name }}
+{% endif %}
+{% endfor %}
 
 leonardo_{{ app_name }}_dirs:
   file.directory:
