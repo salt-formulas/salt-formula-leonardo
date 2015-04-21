@@ -32,6 +32,15 @@ leonardo_source_{{ app_name }}:
 {% endif %}
 {% endfor %}
 
+{% if app.database.engine == "postgresql" %}
+psycopg2:
+  pip.installed:
+    - bin_env: /srv/leonardo/sites/{{ app_name }}
+    - download_cache: true
+    - require:
+      - virtualenv: /srv/leonardo/sites/{{ app_name }}
+{% endif %}
+
 leonardo_{{ app_name }}_dirs:
   file.directory:
   - names:
