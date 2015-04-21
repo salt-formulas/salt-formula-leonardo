@@ -138,9 +138,9 @@ collect_static_{{ app_name }}:
     - file: leonardo_{{ app_name }}_dirs
     - cmd: sync_database_{{ app_name }}
 
-sync_themes_{{ app_name }}:
+sync_all_{{ app_name }}:
   cmd.run:
-  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py sync_themes
+  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py sync_all
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
