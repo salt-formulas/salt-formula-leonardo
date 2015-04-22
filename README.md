@@ -32,7 +32,10 @@
             plugin:
               cms: {}
               web: {}
-              blog: {}
+              blog:
+                source:
+                  engine: 'git'
+                  address: 'git+https://github.com/django-leonardo/leonardo-module-blog.git#egg=leonardo_module_blog'
 
 .. note::
 

@@ -18,13 +18,16 @@ leonardo_source_{{ app_name }}:
   - pip_download_cache: true
   - require:
     - pkg: leonardo_packages
-    - git: leonardo_source_{{ app_name }}
 
 {% for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
 {% if not 'site' in plugin_name %}
 {{ plugin_name }}_{{ app_name }}_req:
   pip.installed:
+    {%- if 'source' in plugin and plugin.source.get('engine', 'git') == 'git' %}
+    - editable: {{ plugin.source.address }}
+    {%- else %}
     - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ plugin_name }}.txt
+    {%- endif %}
     - bin_env: /srv/leonardo/sites/{{ app_name }}
     - download_cache: true
     - require:
