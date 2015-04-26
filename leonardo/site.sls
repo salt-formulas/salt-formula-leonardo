@@ -10,7 +10,6 @@ leonardo_source_{{ app_name }}:
   - rev: {{ app.source.get('rev', app.source.get('revision', 'master')) }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
-    - pkg: git_packages
 
 /srv/leonardo/sites/{{ app_name }}:
   virtualenv.manage:
