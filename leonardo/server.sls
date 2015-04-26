@@ -3,9 +3,6 @@
 
 {%- if server.enabled %}
 
-include:
-- git
-
 leonardo_packages:
   pkg.installed:
   - names: {{ server.pkgs }}
