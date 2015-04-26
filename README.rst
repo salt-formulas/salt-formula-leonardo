@@ -1,20 +1,31 @@
 
-# Django-Leonardo Formula
+=======================
+Django-Leonardo Formula
+=======================
 
-## Sample pillar
+Sample pillar
+=============
+
+.. code-block:: yaml
 
     leonardo:
       server:
         enabled: true
-        secret_key: 'y5m^_^ak6+5(f.m^_^ak6+5(f.m^_^ak6+5(f.'
-        source:
-          type: 'git'
-          address: 'git@repo1.robotice.cz:python-apps/leonardo.git'
-          rev: 'master'
         app:
           example_app:
+            workers: 3
+            bind:
+              address: 0.0.0.0 # ${linux:network:fqdn}
+              port: 9754
+              protocol: tcp
+            enabled: true
+            source:
+              type: 'git'
+              address: 'git@repo1.robotice.cz:python-apps/leonardo.git'
+              rev: 'master'
             config:
               app_config: true
+            secret_key: 'y5m^_^ak6+5(f.m^_^ak6+5(f.m^_^ak6+5(f.'
             cache:
               engine: 'memcached'
               host: '127.0.0.1'
@@ -30,8 +41,9 @@
               password: 'mail-pwd'
               user: 'mail-user'
             plugin:
-              cms: {}
-              web: {}
+              eshop: {}
+              static: {}
+              sentry: {}
               blog:
                 source:
                   engine: 'git'
@@ -43,4 +55,4 @@
 
 ## Read more
 
-* ...
+* https://github.com/django-leonardo/django-leonardo
