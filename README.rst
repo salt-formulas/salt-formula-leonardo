@@ -13,12 +13,12 @@ Sample pillar
         enabled: true
         app:
           example_app:
+            enabled: true
             workers: 3
             bind:
               address: 0.0.0.0 # ${linux:network:fqdn}
               port: 9754
               protocol: tcp
-            enabled: true
             source:
               type: 'git'
               address: 'git@repo1.robotice.cz:python-apps/leonardo.git'
@@ -44,6 +44,8 @@ Sample pillar
               eshop: {}
               static: {}
               sentry: {}
+              my_site:
+                site: true
               blog:
                 source:
                   engine: 'git'
@@ -53,6 +55,7 @@ Sample pillar
 
     App.config will be rendered as python object in ``EXAMPLE_APP_CONFIG = {'app_config': True}``
 
-## Read more
+Read more
+=========
 
 * https://github.com/django-leonardo/django-leonardo

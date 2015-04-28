@@ -19,7 +19,7 @@ leonardo_source_{{ app_name }}:
     - pkg: leonardo_packages
 
 {% for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
-{% if not 'site' in plugin_name %}
+{% if not plugin.get('site', false) %}
 {{ plugin_name }}_{{ app_name }}_req:
   pip.installed:
     {%- if 'source' in plugin and plugin.source.get('engine', 'git') == 'git' %}
