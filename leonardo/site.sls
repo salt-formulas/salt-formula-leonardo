@@ -34,7 +34,7 @@ leonardo_source_{{ app_name }}:
 {% endif %}
 {% endfor %}
 
-{% if app.database.engine == "postgresql" %}
+{% if app.database.engine in ["postgresql", "postgres"] %}
 psycopg2:
   pip.installed:
     - bin_env: /srv/leonardo/sites/{{ app_name }}
