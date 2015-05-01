@@ -35,8 +35,9 @@ leonardo_source_{{ app_name }}:
 {% endfor %}
 
 {% if app.database.engine in ["postgresql", "postgres"] %}
-psycopg2:
+psycopg2_{{ app_name }}:
   pip.installed:
+    - name: psycopg2
     - bin_env: /srv/leonardo/sites/{{ app_name }}
     - download_cache: true
     - require:
