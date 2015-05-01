@@ -57,7 +57,7 @@ leonardo_{{ app_name }}_dirs:
   - require:
     - user: leonardo
 
-{{ server.repository }}:leonardo-sites/{{ app_name }}.git:
+{{ server.repository }}:leonardo-sites/{{ app_name|replace('_', '-') }}.git:
   git.latest:
   - target: /srv/leonardo/sites/{{ app_name }}/site
   - require:
