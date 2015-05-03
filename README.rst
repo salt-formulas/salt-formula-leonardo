@@ -51,6 +51,23 @@ Sample pillar
                   engine: 'git'
                   address: 'git+https://github.com/django-leonardo/leonardo-module-blog.git#egg=leonardo_module_blog'
 
+Backup and Initial Data
+-----------------------
+
+.. code-block:: yaml
+
+    leonardo:
+      server:
+        enabled: true
+        app:
+          example_app:
+            backup: true
+            initial_data:
+              engine: backupninja
+              source: backup.com
+              host: web01.webapp.prd.dio.backup.com
+              name: example_app
+
 .. note::
 
     App.config will be rendered as python object in ``EXAMPLE_APP_CONFIG = {'app_config': True}``
