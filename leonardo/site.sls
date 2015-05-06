@@ -120,7 +120,7 @@ leonardo_site_{{ app_name }}_wsgi:
 {%- if app.get('init', false) %}
 makemigrations_{{ app_name }}:
   cmd.run:
-  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py makemigrations --noinput
+  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py makemigrations --merge --noinput
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
