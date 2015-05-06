@@ -117,12 +117,25 @@ leonardo_site_{{ app_name }}_wsgi:
   - require:
     - file: /srv/leonardo/sites/{{ app_name }}/manage.py
 
+{%- if app.get('init', false) %}
+makemigrations_{{ app_name }}:
+  cmd.run:
+  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py makemigrations --noinput
+  - cwd: /srv/leonardo/sites/{{ app_name }}
+  - require:
+    - file: leonardo_{{ app_name }}_dirs
+    - file: /srv/leonardo/sites/{{ app_name }}/local_settings.py
+{%- endif %}
+
 sync_database_{{ app_name }}:
   cmd.run:
   - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py syncdb --noinput
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
-    - file: leonardo_{{ app_name }}_dirs
+    {%- if app.get('init', false) %}
+    - cmd: makemigrations_{{ app_name }}
+    {%- endif %}
+    - file: /srv/leonardo/sites/{{ app_name }}/local_settings.py
     - file: /srv/leonardo/sites/{{ app_name }}/manage.py
 
 migrate_database_{{ app_name }}:

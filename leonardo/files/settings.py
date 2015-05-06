@@ -15,7 +15,6 @@ DATABASES = {
         'OPTIONS': { 'init_command': 'SET storage_engine=INNODB,character_set_connection=utf8,collation_connection=utf8_unicode_ci', },
         {% elif app.database.engine == 'postgres' %}
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        {% else %}
         {%- endif %}
         'HOST': '{{ app.database.host }}',
         'NAME': '{{ app.database.name }}',
@@ -27,16 +26,15 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '{{ app.cache.host }}:11211',
+        'LOCATION': '{{ app.get("cache", {"host": "127.0.0.1"}).host }}:11211',
         'TIMEOUT': 120,
-        'KEY_PREFIX': '{{ app.cache.prefix }}'
+        'KEY_PREFIX': '{{ app.get("cache", {"prefix": "CACHE_"+ app_name|upper}).prefix }}'
     }
 }
 {% if app.secret_key is defined %}
 SECRET_KEY = '{{ app.secret_key }}'
 {% endif %}
 
-SITE_BRANDING = '{{ app.get('branding', 'leonardo') }}'
 
 {%- if app.mail.engine != "console" %}
 EMAIL_HOST = '{{ app.mail.host }}',
@@ -44,17 +42,12 @@ EMAIL_HOST_USER = '{{ app.mail.user }}',
 EMAIL_HOST_PASSWORD = '{{ app.mail.password }}'
 {%- endif %}
 
-{%- if app.robotice_api is defined %}
-ROBOTICE_HOST = '{{ app.robotice_api.host }}'
-ROBOTICE_PORT = '{{ app.robotice_api.port }}'
-{%- endif %}
-
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     ('Admin', 'mail@newt.cz'),
+    ('Admin', 'mail@majklk.cz'),
 )
 
 MEDIA_ROOT = '/srv/leonardo/sites/{{ app_name }}/media/'
@@ -62,25 +55,13 @@ STATIC_ROOT = '/srv/leonardo/sites/{{ app_name }}/static/'
 
 MANAGERS = ADMINS
 
+
+SITE_NAME = '{{ app.get("site_name", app_name.replace('_', ' ')|capitalize) }}'
 SITE_ID = 1
-SITE_NAME = 'leonardo'
 
 TIME_ZONE = '{{ pillar.linux.system.timezone }}'
 
-LANGUAGE_CODE = 'en'
-
-APPS = [
-{%- for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
-    '{{ plugin_name }}',
-{%- endfor %}
-]
-
-# SUPPORT FOR SPECIFIC APP CONFIG
-{%- for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
-{%- if plugin.config is defined %}
-{{ plugin_name|upper }}_CONFIG = {{ plugin.config|python }}
-{%- endif %}
-{%- endfor %}
+LANGUAGE_CODE = '{{  app.get('language', 'en') }}'
 
 LOGGING = {
     'version': 1,
@@ -130,3 +111,16 @@ LOGGING = {
         },
     }
 }
+
+APPS = [
+{%- for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
+    '{{ plugin_name }}',
+{%- endfor %}
+]
+
+# SUPPORT FOR SPECIFIC APP CONFIG
+{%- for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
+{%- if plugin.config is defined %}
+{{ plugin_name|upper }}_CONFIG = {{ plugin.config|python }}
+{%- endif %}
+{%- endfor %}
