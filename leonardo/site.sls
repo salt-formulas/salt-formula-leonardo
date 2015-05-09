@@ -11,12 +11,20 @@ leonardo_source_{{ app_name }}:
   - require:
     - file: leonardo_{{ app_name }}_dirs
 
+leonardo_symlink_{{ app_name }}:
+  file.symlink:
+  - name: /srv/leonardo/sites/{{ app_name }}/lib/python2.7/site-packages/leonardo
+  - target: /srv/leonardo/sites/{{ app_name }}/leonardo/leonardo
+  - require:
+    - git: leonardo_source_{{ app_name }}
+
 /srv/leonardo/sites/{{ app_name }}:
   virtualenv.manage:
   - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/default.txt
   - pip_download_cache: true
   - require:
     - pkg: leonardo_packages
+    - file: leonardo_symlink_{{ app_name }}
 
 {% for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
 {% if not plugin.get('site', false) %}
