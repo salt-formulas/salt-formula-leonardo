@@ -17,6 +17,7 @@ leonardo_source_{{ app_name }}:
   - pip_download_cache: true
   - require:
     - pkg: leonardo_packages
+    - git: leonardo_source_{{ app_name }}
 
 {% for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
 {% if not plugin.get('site', false) %}
@@ -56,7 +57,6 @@ leonardo_{{ app_name }}_dirs:
   - makedirs: true
   - require:
     - user: leonardo
-    - virtualenv: /srv/leonardo/sites/{{ app_name }}
 
 {%- if not app.get('site_source', false) %}
 {{ server.repository }}:leonardo-sites/{{ app_name|replace('_', '-') }}.git:
