@@ -31,10 +31,8 @@ CACHES = {
         'KEY_PREFIX': '{{ app.get("cache", {"prefix": "CACHE_"+ app_name|upper}).prefix }}'
     }
 }
-{% if app.secret_key is defined %}
-SECRET_KEY = '{{ app.secret_key }}'
-{% endif %}
 
+SECRET_KEY = '{{ app.get('secret_key', '87941asd897897asd987') }}'
 
 {%- if app.mail.engine != "console" %}
 EMAIL_HOST = '{{ app.mail.host }}',
