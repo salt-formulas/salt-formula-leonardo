@@ -40,26 +40,56 @@ EMAIL_HOST_USER = '{{ app.mail.user }}',
 EMAIL_HOST_PASSWORD = '{{ app.mail.password }}'
 {%- endif %}
 
-DEBUG = True
+DEBUG = {{ app.get('development', True)|python }}
 TEMPLATE_DEBUG = DEBUG
-
-ADMINS = (
-    ('Admin', 'mail@newt.cz'),
-    ('Admin', 'mail@majklk.cz'),
-)
 
 MEDIA_ROOT = '/srv/leonardo/sites/{{ app_name }}/media/'
 STATIC_ROOT = '/srv/leonardo/sites/{{ app_name }}/static/'
 
-MANAGERS = ADMINS
+ADMINS = (
+{%- for email, user in app.get('admins', {}).iteritems() %}
+    {%- if user.name is defined %}
+    ('{{ user.name }}', '{{ email }}'),
+    {%- else %}
+    ('{{ email }}', '{{ email }}'),
+    {%- endif %}
+{%- endfor %}
+)
 
+{%- if app.managers is defined %}
+ADMINS = (
+{%- for email, user in app.get('managers', {}).iteritems() %}
+    {%- if user.name is defined %}
+    ('{{ user.name }}', '{{ email }}'),
+    {%- else %}
+    ('{{ email }}', '{{ email }}'),
+    {%- endif %}
+{%- endfor %}
+)
+{%- else %}
+MANAGERS = ADMINS
+{%- endif %}
 
 SITE_NAME = '{{ app.get("site_name", app_name.replace('_', ' ')|capitalize) }}'
 SITE_ID = 1
 
 TIME_ZONE = '{{ pillar.linux.system.timezone }}'
 
-LANGUAGE_CODE = '{{  app.get('language', 'en') }}'
+{%- for lang_code, lang in app.get('languages', {'en': {'default': True}}).iteritems() %}
+{%- if lang.default is defined and lang.default %}
+LANGUAGE_CODE = '{{ lang_code|lower }}'
+# only helper for jinja rendering
+DEFAULT_LANG = [('{{ lang_code|lower }}', '{{ lang_code|upper }}')]
+{%- endif %}
+{%- endfor %}
+
+LANGUAGES = DEFAULT_LANG + [
+    {%- for lang_code, lang in app.get('languages', [{'en': {'default': True}}]).iteritems() %}
+    {%- if not lang.default is defined or (lang.default is defined and not lang.default) %}
+    ('{{ lang_code|lower }}', '{{ lang_code|upper }}'),
+    {%- endif %}
+    {%- endfor %}
+]
 
 LOGGING = {
     'version': 1,
@@ -116,7 +146,6 @@ APPS = [
 {%- endfor %}
 ]
 
-# SUPPORT FOR SPECIFIC APP CONFIG
 {%- for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
 {%- if plugin.config is defined %}
 {{ plugin_name|upper }}_CONFIG = {{ plugin.config|python }}

@@ -48,7 +48,7 @@ Sample pillar
 Site Name
 ---------
 
-in default state formula produce somethink like this ``Example app`` for custom name set ``site_name``
+Without setting formula produce somethink like this ``Example app`` from your site name ``site_name``
 
 .. code-block:: yaml
 
@@ -67,7 +67,31 @@ Site Language
       server:
         app:
           example_app:
-            language: 'cz'
+            languages:
+              en:
+                default: true
+              cs: {}
+              de: {}
+
+
+Site Admins & Managers
+----------------------
+
+.. code-block:: yaml
+
+    leonardo:
+      server:
+        app:
+          example_app:
+            admins:
+              mail@majklk.cz:
+                name: majklk 
+              mail@newt.cz: {}
+            managers:
+              mail@majklk.cz:
+                name: majklk 
+              mail@newt.cz:
+                name: newt 
 
 Cache
 -----
@@ -103,6 +127,18 @@ Backup and Initial Data
               source: backup.com
               host: web01.webapp.prd.dio.backup.com
               name: example_app
+
+Development Mode
+----------------
+
+.. code-block:: yaml
+
+    leonardo:
+      server:
+        enabled: true
+        app:
+          example_app:
+            development: true
 
 Init your site
 --------------
