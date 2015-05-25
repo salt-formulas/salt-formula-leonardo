@@ -84,7 +84,7 @@ DEFAULT_LANG = [('{{ lang_code|lower }}', '{{ lang_code|upper }}')]
 {%- endfor %}
 
 LANGUAGES = DEFAULT_LANG + [
-    {%- for lang_code, lang in app.get('languages', [{'en': {'default': True}}]).iteritems() %}
+    {%- for lang_code, lang in app.get('languages', {'en': {'default': True}}).iteritems() %}
     {%- if not lang.default is defined or (lang.default is defined and not lang.default) %}
     ('{{ lang_code|lower }}', '{{ lang_code|upper }}'),
     {%- endif %}

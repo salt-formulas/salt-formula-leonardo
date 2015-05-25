@@ -3,6 +3,13 @@
 
 {%- for app_name, app in server.get('app', {}).iteritems() %}
 
+{%- if app.bind is defined and app.bind.port is defined %}
+{%- set app_bind_port = app.bind.port %}
+{%- else %}
+{%- set app_bind_port = 8000 + loop.index %}
+{%- endif %}
+
+
 leonardo_source_{{ app_name }}:
   git.latest:
   - name: {{ app.source.address }}
@@ -105,6 +112,7 @@ leonardo_{{ app_name }}_site_source:
   - template: jinja
   - defaults:
     app_name: "{{ app_name }}"
+    port: {{ app_bind_port }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
 
