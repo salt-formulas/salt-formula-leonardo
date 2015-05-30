@@ -42,7 +42,7 @@ leonardo_source_{{ app_name }}:
 {% endif %}
 {% endfor %}
 
-{% if app.database.engine in ["postgresql", "postgres"] %}
+{% if app.database.engine in ["postgresql", "postgres", 'postgis'] %}
 psycopg2_{{ app_name }}:
   pip.installed:
     - name: psycopg2
