@@ -16,7 +16,7 @@ DATABASES = {
         {% elif app.database.engine == 'postgres' %}
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         {% elif app.database.engine == 'postgis' %}
-        'ENGINE': 'django.db.backends.postgis',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         {%- endif %}
         'HOST': '{{ app.database.host }}',
         'NAME': '{{ app.database.name }}',
