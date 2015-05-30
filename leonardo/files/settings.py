@@ -15,6 +15,8 @@ DATABASES = {
         'OPTIONS': { 'init_command': 'SET storage_engine=INNODB,character_set_connection=utf8,collation_connection=utf8_unicode_ci', },
         {% elif app.database.engine == 'postgres' %}
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        {% elif app.database.engine == 'postgis' %}
+        'ENGINE': 'django.db.backends.postgis',
         {%- endif %}
         'HOST': '{{ app.database.host }}',
         'NAME': '{{ app.database.name }}',
