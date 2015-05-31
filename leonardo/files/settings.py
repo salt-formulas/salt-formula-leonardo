@@ -42,7 +42,14 @@ EMAIL_HOST_USER = '{{ app.mail.user }}',
 EMAIL_HOST_PASSWORD = '{{ app.mail.password }}'
 {%- endif %}
 
+{%- if app.development is defined %}
 DEBUG = {{ app.get('development', True)|python }}
+{%- elif pillar.linux.system is defined and pillar.linux.system.get('environment', ['prod', 'prd', 'production']) %}
+DEBUG = False
+{%- else %}
+DEBUG = True
+{%- endif %}
+
 TEMPLATE_DEBUG = DEBUG
 
 MEDIA_ROOT = '/srv/leonardo/sites/{{ app_name }}/media/'
