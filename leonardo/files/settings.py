@@ -151,7 +151,9 @@ LOGGING = {
 
 APPS = [
 {%- for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
+    {%- if plugin.get('add_to_apps', False) %}
     '{{ plugin_name }}',
+    {%- endif %}
 {%- endfor %}
 ]
 
