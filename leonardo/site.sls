@@ -33,7 +33,6 @@ leonardo_source_{{ app_name }}:
     {%- if 'source' in plugin and plugin.source.get('engine', 'git') == 'git' %}
     - editable: {{ plugin.source.address }}
     {%- else %}
-    - pip_download_cache: true
     - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ plugin_name }}.txt
     {%- endif %}
     - bin_env: /srv/leonardo/sites/{{ app_name }}
@@ -45,7 +44,6 @@ leonardo_source_{{ app_name }}:
 {% if app.logger_handler is defined %}
 logging_{{ app_name }}_req:
   pip.installed:
-    - pip_download_cache: true
     - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ app.logger_handler.engine }}.txt
     - bin_env: /srv/leonardo/sites/{{ app_name }}
     - require:
@@ -151,11 +149,15 @@ leonardo_site_{{ app_name }}_wsgi:
 {%- if app.get('init', false) %}
 makemigrations_{{ app_name }}:
   cmd.run:
-  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py makemigrations --merge --noinput
+  - names:
+    - source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py makemigrations --merge --noinput
+    - touch /root/leonardo/flags/{{ app_name }}-installed
+  - unless: "[ -f /root/leonardo/flags/{{ app_name }}-installed ]"
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
     - file: /srv/leonardo/sites/{{ app_name }}/local_settings.py
+  - unless: "test -e /"
 {%- endif %}
 
 sync_database_{{ app_name }}:
@@ -210,8 +212,10 @@ sync_all_{{ app_name }}:
 
 restore_leonardo_{{ app_name }}:
   cmd.run:
-  - name: /root/leonardo/scripts/restore_{{ app_name }}.sh
-  - unless: "[ -f /root/leonardo/flags/{{ app_name }}-installed ]"
+  - names:
+    - /root/leonardo/scripts/restore_{{ app_name }}.sh
+    - touch /root/leonardo/flags/{{ app_name }}-restored
+  - unless: "[ -f /root/leonardo/flags/{{ app_name }}-restored ]"
   - cwd: /root
   - require:
     - file: /root/leonardo/scripts/restore_{{ app_name }}.sh
