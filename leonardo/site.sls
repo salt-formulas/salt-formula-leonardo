@@ -33,20 +33,31 @@ leonardo_source_{{ app_name }}:
     {%- if 'source' in plugin and plugin.source.get('engine', 'git') == 'git' %}
     - editable: {{ plugin.source.address }}
     {%- else %}
+    - pip_download_cache: true
     - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ plugin_name }}.txt
     {%- endif %}
     - bin_env: /srv/leonardo/sites/{{ app_name }}
-    - download_cache: true
     - require:
       - virtualenv: /srv/leonardo/sites/{{ app_name }}
 {% endif %}
 {% endfor %}
+
+{% if app.logger_handler is defined %}
+logging_{{ app_name }}_req:
+  pip.installed:
+    - pip_download_cache: true
+    - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ app.logger_handler.engine }}.txt
+    - bin_env: /srv/leonardo/sites/{{ app_name }}
+    - require:
+      - virtualenv: /srv/leonardo/sites/{{ app_name }}
+{% endif %}
 
 {% if app.database.engine in ["postgresql", "postgres", 'postgis'] %}
 psycopg2_{{ app_name }}:
   pip.installed:
     - name: psycopg2
     - bin_env: /srv/leonardo/sites/{{ app_name }}
+    - pip_download_cache: true
     - download_cache: true
     - require:
       - virtualenv: /srv/leonardo/sites/{{ app_name }}

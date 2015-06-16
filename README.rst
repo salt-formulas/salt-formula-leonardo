@@ -110,6 +110,19 @@ without setting cache we get default localhost memcache with per site prefix
               host: '192.168.1.1'
               prefix: 'CACHE_EXAMPLEAPP'
 
+Sentry Exception Handling
+-------------------------
+
+.. code-block:: yaml
+
+    leonardo:
+      server:
+        app:
+          example_app:
+            ...
+            logger_handler:
+              engine: raven
+              dsn: http://pub:private@sentry1.test.cz/2
 
 Backup and Initial Data
 -----------------------

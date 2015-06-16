@@ -142,7 +142,7 @@ LOGGING = {
     },
     'loggers': {
         'django.request': {
-            'handlers': ['mail_admins', 'file'],
+            'handlers': ['file', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': True,
         },
@@ -162,3 +162,9 @@ APPS = [
 {{ plugin_name|upper }}_CONFIG = {{ plugin.config|python }}
 {%- endif %}
 {%- endfor %}
+
+{%- if app.logger_handler is defined and app.logger_handler.engine == "sentry" %}
+RAVEN_CONFIG = {
+    'dsn': '{{ app.logger_handler.dsn }}',
+}
+{%- endif %}
