@@ -75,7 +75,7 @@ leonardo_{{ app_name }}_dirs:
     - user: leonardo
 
 {%- if not app.get('site_source', false) %}
-{{ server.repository }}:leonardo-sites/{{ app_name|replace('_', '-') }}.git:
+{{ server.repository }}:leonardo-sites/{{ app_name|replace('_', '-') }}-site.git:
   git.latest:
   - target: /srv/leonardo/sites/{{ app_name }}/site
   - require:
