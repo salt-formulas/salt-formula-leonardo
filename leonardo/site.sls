@@ -41,10 +41,10 @@ leonardo_source_{{ app_name }}:
 {% endif %}
 {% endfor %}
 
-{% if app.logger_handler is defined %}
+{% if app.logging is defined %}
 logging_{{ app_name }}_req:
   pip.installed:
-    - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ app.logger_handler.engine }}.txt
+    - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ app.logging.engine }}.txt
     - bin_env: /srv/leonardo/sites/{{ app_name }}
     - require:
       - virtualenv: /srv/leonardo/sites/{{ app_name }}

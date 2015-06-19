@@ -163,8 +163,8 @@ APPS = [
 {%- endif %}
 {%- endfor %}
 
-{%- if app.logger_handler is defined and app.logger_handler.engine == "sentry" %}
+{%- if app.logging is defined and app.logging.engine == "sentry" %}
 RAVEN_CONFIG = {
-    'dsn': '{{ app.logger_handler.dsn }}',
+    'dsn': '{{ app.logging.dsn }}',
 }
 {%- endif %}

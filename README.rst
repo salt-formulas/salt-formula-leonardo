@@ -120,7 +120,7 @@ Sentry Exception Handling
         app:
           example_app:
             ...
-            logger_handler:
+            logging:
               engine: raven
               dsn: http://pub:private@sentry1.test.cz/2
 
