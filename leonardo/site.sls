@@ -157,7 +157,6 @@ makemigrations_{{ app_name }}:
   - require:
     - file: leonardo_{{ app_name }}_dirs
     - file: /srv/leonardo/sites/{{ app_name }}/local_settings.py
-  - unless: "test -e /"
 {%- endif %}
 
 sync_database_{{ app_name }}:
@@ -213,9 +212,8 @@ sync_all_{{ app_name }}:
 restore_leonardo_{{ app_name }}:
   cmd.run:
   - names:
-    - /root/leonardo/scripts/restore_{{ app_name }}.sh
-    - touch /root/leonardo/flags/{{ app_name }}-restored
-  - unless: "[ -f /root/leonardo/flags/{{ app_name }}-restored ]"
+    - /root/leonardo/scripts/restore_{{ app_name }}.sh && touch /root/leonardo/flags/{{ app_name }}-restored
+  - unless: "test -e /root/leonardo/flags/{{ app_name }}-restored"
   - cwd: /root
   - require:
     - file: /root/leonardo/scripts/restore_{{ app_name }}.sh
