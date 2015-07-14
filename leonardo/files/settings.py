@@ -163,7 +163,7 @@ APPS = [
 {%- endif %}
 {%- endfor %}
 
-{%- if app.logging is defined and app.logging.engine == "sentry" %}
+{%- if app.logging is defined and app.logging.engine in ["sentry", 'raven'] %}
 RAVEN_CONFIG = {
     'dsn': '{{ app.logging.dsn }}',
 }
