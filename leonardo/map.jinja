@@ -1,6 +1,7 @@
+
 {% set server = salt['grains.filter_by']({
     'Debian': {
-        'pkgs': ["python-pip","python-virtualenv", "python-memcache", "python-psycopg2", "python-imaging", "python-docutils", "python-simplejson", "python-tz", "python-pygraphviz", "python-dev", "gettext", "libpq-dev", "libffi-dev", "mercurial"]  ,
+        'pkgs': ["python-pip","python-virtualenv", "python-memcache", "python-psycopg2", "python-imaging", "python-docutils", "python-simplejson", "python-tz", "python-pygraphviz", "python-dev", "gettext", "libpq-dev", "libffi-dev", "mercurial", "libjpeg-dev"],
         'repository': 'git@repo1.robotice.cz'
     },
     'RedHat': {
