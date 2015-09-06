@@ -158,32 +158,16 @@ makemigrations_{{ app_name }}:
     - file: /srv/leonardo/sites/{{ app_name }}/local_settings.py
 {%- endif %}
 
-sync_database_{{ app_name }}:
-  cmd.run:
-  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py syncdb --noinput
-  - cwd: /srv/leonardo/sites/{{ app_name }}
-  - require:
-    {%- if app.get('init', false) %}
-    - cmd: makemigrations_{{ app_name }}
-    {%- endif %}
-    - file: /srv/leonardo/sites/{{ app_name }}/local_settings.py
-    - file: /srv/leonardo/sites/{{ app_name }}/manage.py
-
 migrate_database_{{ app_name }}:
   cmd.run:
   - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py migrate --noinput
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
+    {%- if app.get('init', false) %}
+    - cmd: makemigrations_{{ app_name }}
+    {%- endif %}
     - file: leonardo_{{ app_name }}_dirs
-    - cmd: sync_database_{{ app_name }}
-
-collect_static_{{ app_name }}:
-  cmd.run:
-  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py collectstatic --noinput
-  - cwd: /srv/leonardo/sites/{{ app_name }}
-  - require:
-    - file: leonardo_{{ app_name }}_dirs
-    - cmd: sync_database_{{ app_name }}
+    - file: /srv/leonardo/sites/{{ app_name }}/local_settings.py
 
 sync_all_{{ app_name }}:
   cmd.run:
@@ -191,7 +175,7 @@ sync_all_{{ app_name }}:
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
-    - cmd: collect_static_{{ app_name }}
+    - cmd: migrate_database_{{ app_name }}
 
 {%- if app.initial_data is defined %}
 
@@ -206,7 +190,7 @@ sync_all_{{ app_name }}:
   - require:
     - file: /root/leonardo/scripts
     - file: /root/leonardo/flags
-    - cmd: sync_database_{{ app_name }}
+    - cmd: migrate_database_{{ app_name }}
 
 restore_leonardo_{{ app_name }}:
   cmd.run:
@@ -226,6 +210,6 @@ chown_{{ app_name }}:
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
-    - cmd: sync_database_{{ app_name }}
+    - cmd: migrate_database_{{ app_name }}
 
 {%- endfor %}
