@@ -110,6 +110,47 @@ without setting cache we get default localhost memcache with per site prefix
               host: '192.168.1.1'
               prefix: 'CACHE_EXAMPLEAPP'
 
+Workers
+-------
+
+Leonardo uses Celery workers for long running backgrounds jobs which runs under supervisor.
+
+Redis
+
+.. code-block:: yaml
+
+    leonardo:
+      server:
+        enabled: true
+        app:
+          example_app:
+            worker: true
+            broker:
+              engine: redis
+              host: 127.0.0.1
+              port: 6379
+              number: 0
+
+
+AMQP
+
+.. code-block:: yaml
+
+    leonardo:
+      server:
+        enabled: true
+        app:
+          example_app:
+            worker: true
+            broker:
+              engine: amqp
+              host: 127.0.0.1
+              port: 5672
+              password: password
+              user: example_app
+              virtual_host: /
+
+
 Sentry Exception Handling
 -------------------------
 

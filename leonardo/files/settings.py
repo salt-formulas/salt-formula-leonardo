@@ -34,6 +34,13 @@ CACHES = {
     }
 }
 
+{%- if app.broker is defined and app.broker.engine == 'redis' %}
+BROKER_URL = 'redis://{{ app.broker.host }}:{{ app.broker.port }}/{{ app.broker.number }}'
+{%- else %}
+BROKER_URL = 'amqp://{{ app.broker.user }}:{{ app.broker.password }}@{{ app.broker.host }}:{{ app.broker.get("port",5672) }}/{{ app.broker.virtual_host }}'
+{%- endif %}
+
+
 SECRET_KEY = '{{ app.get('secret_key', '87941asd897897asd987') }}'
 
 {%- if app.mail.engine != "console" %}
