@@ -36,7 +36,7 @@ CACHES = {
 
 {%- if app.broker is defined and app.broker.engine == 'redis' %}
 BROKER_URL = 'redis://{{ app.broker.host }}:{{ app.broker.port }}/{{ app.broker.number }}'
-{%- else %}
+{%- elif  app.broker is defined and app.broker.engine == 'amqp' %}
 BROKER_URL = 'amqp://{{ app.broker.user }}:{{ app.broker.password }}@{{ app.broker.host }}:{{ app.broker.get("port",5672) }}/{{ app.broker.virtual_host }}'
 {%- endif %}
 
