@@ -156,6 +156,21 @@ makemigrations_{{ app_name }}:
   - require:
     - file: leonardo_{{ app_name }}_dirs
     - file: /srv/leonardo/sites/{{ app_name }}/local_settings.py
+
+{% do app.get('admins', {}).update(app.get('managers', {})) %}
+{% for username, user in app.get('admins', {}).iteritems() %}
+{{ username }}_{{ app_name }}_req:
+  module.run:
+  - name: django.createsuperuser
+  - settings_module: leonardo.settings
+  - username: {{ username }}
+  - email: {{ username }}
+  - bin_env: /srv/leonardo/sites/{{ app_name }}
+  - pythonpath: "/srv/leonardo/sites/{{ app_name }}/leonardo:/srv/leonardo/sites/{{ app_name }}"
+  - require:
+    - cmd: sync_all_{{ app_name }}
+{% endfor %}
+
 {%- endif %}
 
 migrate_database_{{ app_name }}:
