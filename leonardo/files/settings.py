@@ -175,3 +175,5 @@ RAVEN_CONFIG = {
     'dsn': '{{ app.logging.dsn }}',
 }
 {%- endif %}
+
+LEONARDO_BOOTSTRAP_DIR = "/srv/leonardo/sites/{{ app_name }}/"

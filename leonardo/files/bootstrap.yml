@@ -1,0 +1,42 @@
+{%- if users %}
+auth.User:
+  {%- for mail, user in users.iteritems() %}
+  {{ user.get("name", mail) }}:
+    password: {{ user.get("password", "default") }}
+    mail: {{ mail }}
+  {%- endfor %}
+{%- endif %}
+web.Page:
+  QuickStart:
+    title: Quickstart
+    slug: quickstart
+    override_url: /
+    featured: false
+    theme: bootstrap
+    in_navigation: true
+    active: true
+    color_scheme: default
+    content:
+      header:
+        web.SiteHeadingWidget:
+          attrs:
+            site_title: Leonardo Site
+            content_theme: navbar
+            base_theme: default
+          dimenssions:
+            md: 2
+        web.TreeNavigationWidget:
+          attrs:
+            depth: 2
+            content_theme: navbar
+            base_theme: default
+          dimenssions:
+            md: 6
+        web.UserLoginWidget:
+          attrs:
+            layout: inline
+            type: 2
+            content_theme: navbar
+            base_theme: default
+          dimenssions:
+            md: 4

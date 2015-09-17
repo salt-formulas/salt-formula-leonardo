@@ -145,6 +145,19 @@ leonardo_site_{{ app_name }}_wsgi:
   - require:
     - file: /srv/leonardo/sites/{{ app_name }}/manage.py
 
+{% do app.get('admins', {}).update(app.get('managers', {})) %}
+
+leonardo_site_{{ app_name }}_bootstrap:
+  file.managed:
+  - name: /srv/leonardo/sites/{{ app_name }}/demo.yml
+  - source: salt://leonardo/files/bootstrap.yml
+  - mode: 755
+  - template: jinja
+  - defaults:
+    users: {{ app.get('admins', {}) }}
+  - require:
+    - file: /srv/leonardo/sites/{{ app_name }}
+
 {%- if app.get('init', false) %}
 makemigrations_{{ app_name }}:
   cmd.run:
@@ -157,7 +170,6 @@ makemigrations_{{ app_name }}:
     - file: leonardo_{{ app_name }}_dirs
     - file: /srv/leonardo/sites/{{ app_name }}/local_settings.py
 
-{% do app.get('admins', {}).update(app.get('managers', {})) %}
 {% for username, user in app.get('admins', {}).iteritems() %}
 {{ username }}_{{ app_name }}_req:
   module.run:
