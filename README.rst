@@ -187,7 +187,7 @@ for reinit data do this::
     rm /root/postgresql/flags/leonardo_example_app-installed
     su postgres
     psql
-    drop databae leonardo_example_app;
+    drop database leonardo_example_app;
     salt-call state.sls postgresql,leonardo
 
 Development Mode
