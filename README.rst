@@ -184,7 +184,7 @@ Backup and Initial Data
 
 for reinit data do this::
 
-    rm /root/postgresql/flags/leonardo_example_app-installed
+    rm /root/postgresql/flags/leonardo_example_app-restored
     su postgres
     psql
     drop database leonardo_example_app;
