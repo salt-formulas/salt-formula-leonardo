@@ -9,7 +9,7 @@
 {%- set app_bind_port = 8000 + loop.index %}
 {%- endif %}
 
-
+{%- if app.source is defined and app.source.engine == 'git' %}
 leonardo_source_{{ app_name }}:
   git.latest:
   - name: {{ app.source.address }}
@@ -17,14 +17,21 @@ leonardo_source_{{ app_name }}:
   - rev: {{ app.source.get('rev', app.source.get('revision', 'master')) }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
+{% endif %}
 
 /srv/leonardo/sites/{{ app_name }}:
   virtualenv.manage:
+  {%- if app.source is defined and app.source.engine == 'git' %}
   - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/default.txt
+  {%- else %}
+  - requirements: /srv/leonardo/sites/{{ app_name }}/src/leonardo/requirements/default.txt
+  {%- endif %}
   - pip_download_cache: true
   - require:
     - pkg: leonardo_packages
+    {% if app.source is defined and app.source.engine == 'git' %}
     - git: leonardo_source_{{ app_name }}
+    {% endif %}
 
 {% for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
 {% if not plugin.get('site', false) %}
@@ -33,7 +40,11 @@ leonardo_source_{{ app_name }}:
   {%- if 'source' in plugin and plugin.source.get('engine', 'git') == 'git' %}
   - editable: {{ plugin.source.address }}
   {%- else %}
+  {%- if app.source is defined and app.source.engine == 'git' %}
   - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ plugin_name }}.txt
+  {%- else %}
+  - requirements: /srv/leonardo/sites/{{ app_name }}/src/leonardo/requirements/extras/{{ plugin_name }}.txt
+  {%- endif %}
   {%- endif %}
   - bin_env: /srv/leonardo/sites/{{ app_name }}
   - require:
@@ -44,7 +55,11 @@ leonardo_source_{{ app_name }}:
 {% if app.logging is defined %}
 logging_{{ app_name }}_req:
   pip.installed:
+  {%- if app.source is defined and app.source.engine == 'git' %}
   - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ app.logging.engine }}.txt
+  {%- else %}
+  - requirements: /srv/leonardo/sites/{{ app_name }}/src/leonardo/requirements/extras/{{ app.logging.engine }}.txt
+  {%- endif %}
   - bin_env: /srv/leonardo/sites/{{ app_name }}
   - require:
     - virtualenv: /srv/leonardo/sites/{{ app_name }}
