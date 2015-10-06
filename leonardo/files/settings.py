@@ -57,8 +57,6 @@ DEBUG = False
 DEBUG = True
 {%- endif %}
 
-TEMPLATE_DEBUG = DEBUG
-
 MEDIA_ROOT = '/srv/leonardo/sites/{{ app_name }}/media/'
 STATIC_ROOT = '/srv/leonardo/sites/{{ app_name }}/static/'
 
