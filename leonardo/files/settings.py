@@ -44,9 +44,19 @@ BROKER_URL = 'amqp://{{ app.broker.user }}:{{ app.broker.password }}@{{ app.brok
 SECRET_KEY = '{{ app.get('secret_key', '87941asd897897asd987') }}'
 
 {%- if app.mail.engine != "console" %}
-EMAIL_HOST = '{{ app.mail.host }}',
-EMAIL_HOST_USER = '{{ app.mail.user }}',
+{%- if app.mail.get('encryption', 'none') == 'tls' %}
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+{%- endif %}
+{%- if app.mail.get('encryption', 'none') == 'ssl' %}
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+{%- endif %}
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = '{{ app.mail.host }}'
+EMAIL_HOST_USER = '{{ app.mail.user }}'
 EMAIL_HOST_PASSWORD = '{{ app.mail.password }}'
+EMAIL_PORT = {{ app.mail.get('port', '25') }}
 {%- endif %}
 
 {%- if app.development is defined %}

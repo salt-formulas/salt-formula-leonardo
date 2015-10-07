@@ -165,7 +165,7 @@ leonardo_site_{{ app_name }}_wsgi:
 leonardo_site_{{ app_name }}_bootstrap:
   file.managed:
   - name: /srv/leonardo/sites/{{ app_name }}/demo.yml
-  - source: salt://leonardo/files/bootstrap.yaml
+  - source: salt://leonardo/files/bootstrap.yml
   - mode: 755
   - template: jinja
   - defaults:
