@@ -50,7 +50,6 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 {%- endif %}
 {%- if app.mail.get('encryption', 'none') == 'ssl' %}
-EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 {%- endif %}
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
