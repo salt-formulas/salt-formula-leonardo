@@ -14,7 +14,8 @@ leonardo_source_{{ app_name }}:
   git.latest:
   - name: {{ app.source.address }}
   - target: /srv/leonardo/sites/{{ app_name }}/leonardo
-  - branch: {{ app.source.get('rev', app.source.get('revision', 'master')) }}
+  - rev: {{ app.source.get('rev', app.source.get('revision', 'master')) }}
+  - fetch_tags: true
   - require:
     - file: leonardo_{{ app_name }}_dirs
 {% endif %}
