@@ -34,6 +34,11 @@ leonardo_source_{{ app_name }}:
     - git: leonardo_source_{{ app_name }}
     {% endif %}
 
+virtualenv_{{ app_name }}_extend:
+  virtualenv.manage:
+  - name: /srv/leonardo/sites/{{ app_name }}
+  - requirements: salt://leonardo/files/requirements.txt
+
 {% for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
 {% if not plugin.get('site', false) %}
 {{ plugin_name }}_{{ app_name }}_req:
