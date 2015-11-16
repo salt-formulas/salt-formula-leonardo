@@ -76,7 +76,15 @@ psycopg2_{{ app_name }}:
   pip.installed:
     - name: psycopg2
     - bin_env: /srv/leonardo/sites/{{ app_name }}
-    - download_cache: true
+    - require:
+      - virtualenv: /srv/leonardo/sites/{{ app_name }}
+{% endif %}
+
+{% if app.worker is defined and app.worker %}
+redis_{{ app_name }}:
+  pip.installed:
+    - name: redis
+    - bin_env: /srv/leonardo/sites/{{ app_name }}
     - require:
       - virtualenv: /srv/leonardo/sites/{{ app_name }}
 {% endif %}
