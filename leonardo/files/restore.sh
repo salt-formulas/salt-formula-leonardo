@@ -8,7 +8,7 @@ scp -r backupninja@{{ app.initial_data.source }}:/srv/backupninja/{{ app.initial
 cd /srv/leonardo/sites/{{ app_name }}
 #chown leonardo:leonardo ./media/_cache -R
 #chown leonardo:leonardo ./media/files -R
-python manage.py thumbnail cleanup
-python manage.py thumbnail clear
+. /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py thumbnail cleanup
+. /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py thumbnail clear
 touch /root/leonardo/flags/{{ app_name }}-installed
 {%- endif %}
