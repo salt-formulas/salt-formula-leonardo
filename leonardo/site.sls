@@ -15,6 +15,7 @@ leonardo_source_{{ app_name }}:
   - name: {{ app.source.address }}
   - target: /srv/leonardo/sites/{{ app_name }}/leonardo
   - rev: {{ app.source.get('rev', app.source.get('revision', 'master')) }}
+  - fetch_tags: true
   - require:
     - file: leonardo_{{ app_name }}_dirs
 {% endif %}
@@ -32,6 +33,13 @@ leonardo_source_{{ app_name }}:
     {% if app.source is defined and app.source.engine == 'git' %}
     - git: leonardo_source_{{ app_name }}
     {% endif %}
+
+pip_{{ app_name }}_extra:
+  pip.installed:
+  - requirements: salt://leonardo/files/requirements.txt
+  - bin_env: /srv/leonardo/sites/{{ app_name }}
+  - require:
+    - virtualenv: /srv/leonardo/sites/{{ app_name }}
 
 {% for plugin_name, plugin in app.get('plugin', {}).iteritems() %}
 {% if not plugin.get('site', false) %}
