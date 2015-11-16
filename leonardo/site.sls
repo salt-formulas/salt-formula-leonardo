@@ -91,8 +91,11 @@ leonardo_{{ app_name }}_dirs:
     - /srv/leonardo/sites/{{ app_name }}/media
     - /srv/leonardo/sites/{{ app_name }}/logs
     - /srv/leonardo/sites/{{ app_name }}/media/_cache
+    - /var/log/leonardo
   - mode: 775
   - makedirs: true
+  - group: leonardo
+  - user: leonardo
   - require:
     - user: leonardo
 
