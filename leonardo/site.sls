@@ -28,6 +28,8 @@ leonardo_source_{{ app_name }}:
   - requirements: /srv/leonardo/sites/{{ app_name }}/src/leonardo/requirements/default.txt
   {%- endif %}
   - pip_download_cache: true
+  - group: leonardo
+  - user: leonardo
   - require:
     - pkg: leonardo_packages
     {% if app.source is defined and app.source.engine == 'git' %}
@@ -263,6 +265,5 @@ chown_{{ app_name }}:
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
-    - cmd: migrate_database_{{ app_name }}
 
 {%- endfor %}
