@@ -15,7 +15,6 @@ leonardo_source_{{ app_name }}:
   - name: {{ app.source.address }}
   - target: /srv/leonardo/sites/{{ app_name }}/leonardo
   - rev: {{ app.source.get('rev', app.source.get('revision', 'master')) }}
-  - fetch_tags: true
   - require:
     - file: leonardo_{{ app_name }}_dirs
 {% endif %}
@@ -27,9 +26,6 @@ leonardo_source_{{ app_name }}:
   {%- else %}
   - requirements: /srv/leonardo/sites/{{ app_name }}/src/leonardo/requirements/default.txt
   {%- endif %}
-  - pip_download_cache: true
-  - group: leonardo
-  - user: leonardo
   - require:
     - pkg: leonardo_packages
     {% if app.source is defined and app.source.engine == 'git' %}
