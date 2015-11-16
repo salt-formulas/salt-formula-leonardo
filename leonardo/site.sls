@@ -26,7 +26,6 @@ leonardo_source_{{ app_name }}:
   {%- else %}
   - requirements: /srv/leonardo/sites/{{ app_name }}/src/leonardo/requirements/default.txt
   {%- endif %}
-  - process_dependency_links: True
   - require:
     - pkg: leonardo_packages
     {% if app.source is defined and app.source.engine == 'git' %}
