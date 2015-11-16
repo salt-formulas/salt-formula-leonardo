@@ -26,6 +26,7 @@ leonardo_source_{{ app_name }}:
   {%- else %}
   - requirements: /srv/leonardo/sites/{{ app_name }}/src/leonardo/requirements/default.txt
   {%- endif %}
+  - process_dependency_links: True
   - require:
     - pkg: leonardo_packages
     {% if app.source is defined and app.source.engine == 'git' %}
@@ -36,6 +37,7 @@ pip_{{ app_name }}_extra:
   pip.installed:
   - requirements: salt://leonardo/files/requirements.txt
   - bin_env: /srv/leonardo/sites/{{ app_name }}
+  - process_dependency_links: True
   - require:
     - virtualenv: /srv/leonardo/sites/{{ app_name }}
 
@@ -53,6 +55,7 @@ pip_{{ app_name }}_extra:
   {%- endif %}
   {%- endif %}
   - bin_env: /srv/leonardo/sites/{{ app_name }}
+  - process_dependency_links: True
   - require:
     - virtualenv: /srv/leonardo/sites/{{ app_name }}
 {% endif %}
