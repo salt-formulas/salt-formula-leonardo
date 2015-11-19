@@ -190,6 +190,22 @@ for reinit data do this::
     drop database leonardo_example_app;
     salt-call state.sls postgresql,leonardo
 
+Gitversions
+
+.. code-block:: yaml
+
+    leonardo:
+      server:
+        enabled: true
+        app:
+          example_app:
+            backup: true
+            initial_data:
+              engine: gitversions
+              source: git@repo1.robotice.cz:majklk/backup-test.git
+
+You also need django-gitversions installed.
+
 Development Mode
 ----------------
 
