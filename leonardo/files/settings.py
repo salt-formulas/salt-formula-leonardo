@@ -185,3 +185,6 @@ RAVEN_CONFIG = {
 {%- endif %}
 
 LEONARDO_BOOTSTRAP_DIR = "/srv/leonardo/sites/{{ app_name }}/"
+
+GITVERSIONS_ROOT_PATH = "/srv/leonardo/sites/{{ app_name }}/backup"
+GITVERSIONS_AUTO_SYNC = False
