@@ -24,5 +24,5 @@ exec /srv/leonardo/sites/{{ app_name }}/bin/gunicorn ${DJANGO_WSGI_MODULE}:appli
   --workers $NUM_WORKERS \
   --user=$USER --group=$GROUP \
   --log-level=debug \
-  --bind={%- if app.development %}{{ app.bind.get('address', '0.0.0.0') }}{%- else %}{{ app.bind.get('address', 'localhost') }}{%- endif %}:{{ port }} \
+  --bind={%- if app.get("development", false) %}{{ app.bind.get('address', '0.0.0.0') }}{%- else %}{{ app.bind.get('address', 'localhost') }}{%- endif %}:{{ port }} \
   --max-requests=1000

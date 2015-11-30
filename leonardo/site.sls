@@ -240,6 +240,18 @@ sync_all_{{ app_name }}:
 
 {%- if app.initial_data is defined %}
 
+{%- if app.initial_data.engine is defined and app.initial_data.engine == "gitversions" %}
+
+restore_leonardo_{{ app_name }}:
+  cmd.run:
+  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py gitrestore --url={{ app.initial_data.source }} && touch /root/leonardo/flags/{{ app_name }}-restored
+  - unless: "test -e /root/leonardo/flags/{{ app_name }}-restored"
+  - cwd: /root
+  - require:
+    - file: /root/leonardo/flags
+    - cmd: sync_all_{{ app_name }}
+
+{%- else %}
 /root/leonardo/scripts/restore_{{ app_name }}.sh:
   file:
   - managed
@@ -261,6 +273,8 @@ restore_leonardo_{{ app_name }}:
   - cwd: /root
   - require:
     - file: /root/leonardo/scripts/restore_{{ app_name }}.sh
+
+{%- endif %}
 
 {%- endif %}
 
