@@ -54,6 +54,7 @@ pip_{{ app_name }}_extra:
   {%- endif %}
   {%- endif %}
   - bin_env: /srv/leonardo/sites/{{ app_name }}
+  - exists_action: w
   - process_dependency_links: True
   - require:
     - virtualenv: /srv/leonardo/sites/{{ app_name }}
