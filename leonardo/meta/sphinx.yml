@@ -1,15 +1,16 @@
 {%- from "leonardo/map.jinja" import server with context %}
-name: leonardo
-description: Content Management System
-role:
-  server:
-    name: server
-    param: {}
-    endpoint:
-      {%- for app_name, app in server.get('app', {}).iteritems() %}
-      leonardo_{{ app_name }}:
-        name: {{ app_name }}
-        type: leonardo
-        address: "http://{{ app.bind.address }}:{{ app.bind.port }}/"
-        protocol: http
-      {%- endfor %}
+doc:
+  name: leonardo
+  description: Content Management System
+  role:
+    server:
+      name: server
+      param: {}
+      endpoint:
+        {%- for app_name, app in server.get('app', {}).iteritems() %}
+        leonardo_{{ app_name }}:
+          name: {{ app_name }}
+          type: leonardo
+          address: "http://{{ app.bind.address }}:{{ app.bind.port }}/"
+          protocol: http
+        {%- endfor %}
