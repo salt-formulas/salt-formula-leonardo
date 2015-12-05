@@ -47,7 +47,7 @@ SECRET_KEY = '{{ app.get('secret_key', '87941asd897897asd987') }}'
 {%- if pillar.nginx is defined %}
 {%- from "nginx/map.jinja" import server with context %}
 {%- for site_name, site in server.get('site', {}).iteritems() %}
-{%- if site.enabled and site.ssl is defined and site.ssl.enabled %}
+{%- if site.enabled and site.name == app_name and site.ssl is defined and site.ssl.enabled %}
 # Pass this header from the proxy after terminating the SSL,
 # and don't forget to strip it from the client's request.
 # For more information see:
