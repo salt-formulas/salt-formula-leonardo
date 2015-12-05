@@ -44,7 +44,7 @@ BROKER_URL = 'amqp://{{ app.broker.user }}:{{ app.broker.password }}@{{ app.brok
 
 SECRET_KEY = '{{ app.get('secret_key', '87941asd897897asd987') }}'
 
-{%- if pillar.data.nginx is defined %}
+{%- if pillar.nginx is defined %}
 {%- from "nginx/map.jinja" import server with context %}
 {%- for site_name, site in server.get('site', {}).iteritems() %}
 {%- if site.enabled and site.ssl is defined and site.ssl.enabled %}
