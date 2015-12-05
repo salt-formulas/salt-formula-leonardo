@@ -44,9 +44,8 @@ BROKER_URL = 'amqp://{{ app.broker.user }}:{{ app.broker.password }}@{{ app.brok
 
 SECRET_KEY = '{{ app.get('secret_key', '87941asd897897asd987') }}'
 
-{%- set site = salt['pillar.get']('nginx:server:site:'+site_name) %}
-{%- if site.ssl is defined and site.ssl.enabled %}
-# Set SSL proxy settings:
+{%- for site_name, site in server.get('site', {}).iteritems() %}
+{%- if site.enabled and site.ssl is defined and site.ssl.enabled %}
 # Pass this header from the proxy after terminating the SSL,
 # and don't forget to strip it from the client's request.
 # For more information see:
