@@ -266,4 +266,5 @@ will be
 Read more
 =========
 
+* https://launchpad.net/~tcpcloud
 * https://github.com/django-leonardo/django-leonardo
