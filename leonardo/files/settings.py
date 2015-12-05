@@ -58,6 +58,7 @@ SESSION_COOKIE_SECURE = True
 # for sure
 SECURE_SSL_REDIRECT = True
 {%- endif %}
+{%- endfor %}
 
 
 {%- if app.mail.engine != "console" %}
