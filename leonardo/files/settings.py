@@ -44,6 +44,8 @@ BROKER_URL = 'amqp://{{ app.broker.user }}:{{ app.broker.password }}@{{ app.brok
 
 SECRET_KEY = '{{ app.get('secret_key', '87941asd897897asd987') }}'
 
+{%- if pillar.data.nginx is defined %}
+{%- from "nginx/map.jinja" import server with context %}
 {%- for site_name, site in server.get('site', {}).iteritems() %}
 {%- if site.enabled and site.ssl is defined and site.ssl.enabled %}
 # Pass this header from the proxy after terminating the SSL,
@@ -59,6 +61,7 @@ SESSION_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
 {%- endif %}
 {%- endfor %}
+{%- endif %}
 
 
 {%- if app.mail.engine != "console" %}
