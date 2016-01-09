@@ -1,6 +1,8 @@
 parameters:
   leonardo:
     _support:
+      backupninja:
+        enabled: false
       collectd:
         enabled: false
       heka:
