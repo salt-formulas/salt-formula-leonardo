@@ -44,6 +44,28 @@ BROKER_URL = 'amqp://{{ app.broker.user }}:{{ app.broker.password }}@{{ app.brok
 
 SECRET_KEY = '{{ app.get('secret_key', '87941asd897897asd987') }}'
 
+{%- if pillar.nginx is defined %}
+{%- from "nginx/map.jinja" import server with context %}
+{%- for site_name, site in server.get('site', {}).iteritems() %}
+{%- if site.enabled and site.name == app_name and site.ssl is defined and site.ssl.enabled %}
+{%- if not app.get("development", false) %}
+# Pass this header from the proxy after terminating the SSL,
+# and don't forget to strip it from the client's request.
+# For more information see:
+# https://docs.djangoproject.com/en/1.8/ref/settings/#secure-proxy-ssl-header
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# If Horizon is being served through SSL, then uncomment the following two
+# settings to better secure the cookies from security exploits
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+# for sure
+SECURE_SSL_REDIRECT = True
+{%- endif %}
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+
+
 {%- if app.mail.engine != "console" %}
 {%- if app.mail.get('encryption', 'none') == 'tls' %}
 EMAIL_USE_TLS = True
