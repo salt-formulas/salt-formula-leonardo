@@ -1,5 +1,7 @@
 applications:
 - leonardo
+classes:
+- service.leonardo.support
 parameters:
   leonardo:
     server:

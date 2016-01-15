@@ -1,6 +1,4 @@
-
 {%- from "leonardo/map.jinja" import server with context %}
-
 {%- if server.enabled %}
 
 leonardo_packages:

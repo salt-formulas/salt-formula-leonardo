@@ -1,0 +1,16 @@
+{%- from "leonardo/map.jinja" import server with context %}
+backup:
+  leonardo:
+    fs_includes:
+    {%- for app_name, app in server.get('app', {}).iteritems() %}
+    {%- if app.get('backup', False) %}
+    - /srv/leonardo/sites/{{ app_name }}/media
+    {%- endif %}
+    {%- endfor %}
+    fs_excludes:
+    - _cache/
+    - cache/
+    - lib/
+    - theme/
+    - lib
+    - theme

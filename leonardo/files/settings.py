@@ -210,3 +210,10 @@ LEONARDO_BOOTSTRAP_DIR = "/srv/leonardo/sites/{{ app_name }}/"
 
 GITVERSIONS_ROOT_PATH = "/srv/leonardo/sites/{{ app_name }}/backup"
 GITVERSIONS_AUTO_SYNC = False
+
+# Dashboard custom fields
+LEONARDO_CONF_SPEC = {
+    'dashboard_menu': [],
+    'dashboard_widgets_abailable': [],
+    'dashboard_widgets': []
+}
