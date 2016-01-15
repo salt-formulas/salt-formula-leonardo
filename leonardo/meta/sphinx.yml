@@ -10,7 +10,7 @@ doc:
         {%- for app_name, app in server.get('app', {}).iteritems() %}
         leonardo_{{ app_name }}:
           name: {{ app_name }}
-          type: leonardo
+          type: leonardo_server
           address: "http://{{ app.bind.address }}:{{ app.bind.port }}/"
           protocol: http
         {%- endfor %}
