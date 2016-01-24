@@ -48,7 +48,7 @@ SECRET_KEY = '{{ app.get('secret_key', '87941asd897897asd987') }}'
 {%- from "nginx/map.jinja" import server with context %}
 {%- for site_name, site in server.get('site', {}).iteritems() %}
 {%- if site.enabled and site.name == app_name and site.ssl is defined and site.ssl.enabled %}
-{%- if not app.get("development", false) %}
+{%- if (app.development is defined and not app.development) or (pillar.linux.system is defined and pillar.linux.system.get('environment', 'prd') != 'dev') %}
 # Pass this header from the proxy after terminating the SSL,
 # and don't forget to strip it from the client's request.
 # For more information see:
@@ -83,7 +83,7 @@ EMAIL_PORT = {{ app.mail.get('port', '25') }}
 
 {%- if app.development is defined %}
 DEBUG = {{ app.get('development', True)|python }}
-{%- elif pillar.linux.system is defined and pillar.linux.system.get('environment', ['prod', 'prd', 'production']) %}
+{%- elif pillar.linux.system is defined and pillar.linux.system.get('environment', 'prd') != 'dev' %}
 DEBUG = False
 {%- else %}
 DEBUG = True
