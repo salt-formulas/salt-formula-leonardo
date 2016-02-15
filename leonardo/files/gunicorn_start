@@ -26,5 +26,4 @@ exec /srv/leonardo/sites/{{ app_name }}/bin/gunicorn ${DJANGO_WSGI_MODULE}:appli
   {%- if app.get("development", false) or (pillar.linux.system is defined and pillar.linux.system.get('environment', 'prd') == 'dev') %}
   --log-level=debug \
   {%- endif %}
-  --bind={%- if app.get("development", false) %}{{ app.bind.get('address', '0.0.0.0') }}{%- else %}{{ app.bind.get('address', 'localhost') }}{%- endif %}:{{ port }} \
-  --preload
+  --bind={%- if app.get("development", false) %}{{ app.bind.get('address', '0.0.0.0') }}{%- else %}{{ app.bind.get('address', 'localhost') }}{%- endif %}:{{ port }}
