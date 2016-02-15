@@ -65,7 +65,7 @@ SECURE_SSL_REDIRECT = True
 {%- endfor %}
 {%- endif %}
 
-{%- if app.secure is defined and app.secure.enabled %}
+{%- if app.secure is defined and app.secure and (app.development is defined and not app.development) or (pillar.linux.system is defined and pillar.linux.system.get('environment', 'prd') != 'dev') %}
 # Pass this header from the proxy after terminating the SSL,
 # and don't forget to strip it from the client's request.
 # For more information see:
