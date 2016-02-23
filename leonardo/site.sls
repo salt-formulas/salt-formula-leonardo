@@ -256,7 +256,7 @@ restore_leonardo_{{ app_name }}:
 /root/leonardo/scripts/restore_{{ app_name }}.sh:
   file:
   - managed
-  - source: salt://leonardo/files/restore.sh
+  - source: salt://leonardo/files/restore_{{ app.initial_data.engine }}.sh
   - mode: 700
   - template: jinja
   - defaults:

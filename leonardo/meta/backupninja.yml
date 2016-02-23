@@ -8,9 +8,11 @@ backup:
     {%- endif %}
     {%- endfor %}
     fs_excludes:
-    - _cache/
-    - cache/
-    - lib/
-    - theme/
-    - lib
-    - theme
+    - '**_cache/**'
+    - '**cache/**'
+    - '**lib/**'
+    - '**theme/**'
+    - '**lib**'
+    - '**theme**'
+    - '**public_thumbnails/**'
+
