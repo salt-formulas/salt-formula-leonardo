@@ -197,7 +197,7 @@ leonardo_site_{{ app_name }}_bootstrap:
 makemigrations_{{ app_name }}:
   cmd.run:
   - names:
-    - source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py makemigrations --merge --noinput
+    - source /srv/leonardo/sites/{{ app_name }}/bin/activate; /srv/leonardo/sites/{{ app_name }}/bin/python manage.py makemigrations --merge --noinput
     - touch /root/leonardo/flags/{{ app_name }}-installed
   - unless: "[ -f /root/leonardo/flags/{{ app_name }}-installed ]"
   - cwd: /srv/leonardo/sites/{{ app_name }}
@@ -222,7 +222,7 @@ makemigrations_{{ app_name }}:
 
 migrate_database_{{ app_name }}:
   cmd.run:
-  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; python manage.py migrate --noinput
+  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; /srv/leonardo/sites/{{ app_name }}/bin/python manage.py migrate --noinput
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     {%- if app.get('init', false) %}
@@ -233,7 +233,7 @@ migrate_database_{{ app_name }}:
 
 sync_all_{{ app_name }}:
   cmd.run:
-  - name: 'source /srv/leonardo/sites/{{ app_name }}/bin/activate;rm -r /srv/leonardo/sites/{{ app_name }}/static;python manage.py sync_all;chown leonardo:leonardo ./* -R'
+  - name: 'source /srv/leonardo/sites/{{ app_name }}/bin/activate;rm -r /srv/leonardo/sites/{{ app_name }}/static;/srv/leonardo/sites/{{ app_name }}/bin/python manage.py sync_all;chown leonardo:leonardo ./* -R'
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
