@@ -229,5 +229,7 @@ GITVERSIONS_AUTO_SYNC = False
 LEONARDO_CONF_SPEC = {
     'dashboard_menu': [],
     'dashboard_widgets_abailable': [],
-    'dashboard_widgets': []
+    'dashboard_widgets': [],
+    'store_profile_actions': [],
+    'store_actions': []
 }
