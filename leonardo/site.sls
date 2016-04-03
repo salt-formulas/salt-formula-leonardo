@@ -9,6 +9,8 @@
 {%- set app_bind_port = 8000 + loop.index %}
 {%- endif %}
 
+{%- set index_url = app.source.get('address', 'http://pypi.leonardo-cms.org/simple/') %}
+
 {%- if app.source is defined and app.source.engine == 'git' %}
 leonardo_source_{{ app_name }}:
   git.latest:
@@ -17,6 +19,17 @@ leonardo_source_{{ app_name }}:
   - rev: {{ app.source.get('rev', app.source.get('revision', 'master')) }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
+{% elif app.source is defined and app.source.engine == 'pip' %}
+leonardo_{{ app_name }}:
+  pip.installed:
+  - index_url: {{ index_url }}
+  - trusted_host: {{ index_url.replace('https://', '').replace('/simple/', '') }}
+  - process_dependency_links: True
+  - pre_releases: True
+  - name: django-leonardo
+  - bin_env: /srv/leonardo/sites/{{ app_name }}
+  - require:
+    - virtualenv: /srv/leonardo/sites/{{ app_name }}
 {% endif %}
 
 /srv/leonardo/sites/{{ app_name }}:
@@ -24,7 +37,7 @@ leonardo_source_{{ app_name }}:
   {%- if app.source is defined and app.source.engine == 'git' %}
   - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/default.txt
   {%- else %}
-  - requirements: /srv/leonardo/sites/{{ app_name }}/src/leonardo/requirements/default.txt
+  - requirements: salt://leonardo/files/requirements.txt
   {%- endif %}
   - require:
     - pkg: leonardo_packages
@@ -46,11 +59,16 @@ pip_{{ app_name }}_extra:
   pip.installed:
   {%- if 'source' in plugin and plugin.source.get('engine', 'git') == 'git' %}
   - editable: {{ plugin.source.address }}
+  {%- elif 'source' in plugin and plugin.source.engine == 'pip' %}
+  - name: {{ plugin_name }}
+  - index_url: {{ plugin.source.get('address', 'http://pypi.leonardo-cms.org') }}
+  - trusted_host: {{ index_url.replace('https://', '').replace('/simple/', '') }}
+  - pre_releases: True
   {%- else %}
   {%- if app.source is defined and app.source.engine == 'git' %}
   - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ plugin_name }}.txt
   {%- else %}
-  - requirements: /srv/leonardo/sites/{{ app_name }}/src/leonardo/requirements/extras/{{ plugin_name }}.txt
+  - name: {{ plugin_name }}
   {%- endif %}
   {%- endif %}
   - bin_env: /srv/leonardo/sites/{{ app_name }}
