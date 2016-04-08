@@ -189,8 +189,13 @@ leonardo_{{ app_name }}_site_source:
 
 leonardo_site_{{ app_name }}_wsgi:
   file.managed:
+  {%- if app.server_engine is defined and app.server_engine == "daphne" %}
+  - name: /srv/leonardo/sites/{{ app_name }}/asgi.py
+  - source: salt://leonardo/files/asgi.py
+  {%- else %}
   - name: /srv/leonardo/sites/{{ app_name }}/wsgi.py
   - source: salt://leonardo/files/wsgi.py
+  {%- endif %}
   - mode: 755
   - template: jinja
   - defaults:
