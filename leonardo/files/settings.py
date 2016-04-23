@@ -228,7 +228,7 @@ GITVERSIONS_AUTO_SYNC = False
 # Dashboard custom fields
 LEONARDO_CONF_SPEC = {
     'dashboard_menu': [],
-    'dashboard_widgets_abailable': [],
+    'dashboard_widgets_available': [],
     'dashboard_widgets': [],
     'store_profile_actions': [],
     'store_actions': []
