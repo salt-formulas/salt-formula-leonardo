@@ -73,6 +73,27 @@ Site Language
               cs: {}
               de: {}
 
+LDAP auth support
+-----------------
+
+.. code-block:: yaml
+
+    leonardo:
+      server:
+        app:
+          myapp:
+            ldap:
+              url: "ldaps://idm.example.com"
+              binddn: "uid=apache,cn=users,cn=accounts,dc=example,dc=com"
+              password: "secretpassword"
+              basedn: "dc=example,dc=com"
+              require_group: myapp-users
+              flags_mapping:
+                is_active: myapp-users
+                is_staff: myapp-admins
+                is_superuser: myapp-admins
+
+This settings needs leonardo-auth-ldap installed.
 
 Site Admins & Managers
 ----------------------
@@ -268,3 +289,4 @@ Read more
 
 * https://launchpad.net/~tcpcloud
 * https://github.com/django-leonardo/django-leonardo
+* https://github.com/leonardo-modules/leonardo-auth-ldap
