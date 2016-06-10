@@ -9,7 +9,7 @@
 {%- set app_bind_port = 8000 + loop.index %}
 {%- endif %}
 
-{%- set index_url = app.source.get('address', 'http://pypi.leonardo-cms.org/simple/') %}
+{%- set index_url = app.source.get('address', 'http://pypi.python.org/simple/') %}
 
 {%- if app.source is defined and app.source.engine == 'git' %}
 leonardo_source_{{ app_name }}:
@@ -22,8 +22,10 @@ leonardo_source_{{ app_name }}:
 {% elif app.source is defined and app.source.engine == 'pip' %}
 leonardo_{{ app_name }}:
   pip.installed:
+  {%- if app.source.address is defined %}
   - index_url: {{ index_url }}
   - trusted_host: {{ index_url.replace('https://', '').replace('/simple/', '') }}
+  {%- endif %}
   - process_dependency_links: True
   - pre_releases: True
   - name: django-leonardo
@@ -60,10 +62,14 @@ pip_{{ app_name }}_extra:
   {%- if 'source' in plugin and plugin.source.get('engine', 'git') == 'git' %}
   - editable: {{ plugin.source.address }}
   {%- elif 'source' in plugin and plugin.source.engine == 'pip' %}
-  - name: {{ plugin_name }}
-  - index_url: {{ plugin.source.get('address', 'http://pypi.leonardo-cms.org') }}
+  - name: {{ plugin_name }} {%- if plugin.version is defined %}=={{ plugin.version }}{% endif %}
+  {%- if plugin.source.address is defined %}
+  - index_url: {{ plugin.source.get('address', 'http://pypi.python.org') }}
   - trusted_host: {{ index_url.replace('https://', '').replace('/simple/', '') }}
+  {%- endif %}
+  {%- if not plugin.version is defined %}
   - pre_releases: True
+  {%- endif %}
   {%- else %}
   {%- if app.source is defined and app.source.engine == 'git' %}
   - requirements: /srv/leonardo/sites/{{ app_name }}/leonardo/requirements/extras/{{ plugin_name }}.txt
