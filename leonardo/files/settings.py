@@ -278,5 +278,6 @@ LEONARDO_CONF_SPEC = {
     'dashboard_widgets_available': [],
     'dashboard_widgets': [],
     'store_profile_actions': [],
-    'store_actions': []
+    'store_actions': [],
+    'csb_product_backends': []
 }
