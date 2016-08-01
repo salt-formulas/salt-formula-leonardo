@@ -6,8 +6,8 @@ clouds:
 {%- if cloud.engine == "openstack" %}
   {{ cloud_name }}:
     auth:
-      username: admin
-      project_name: admin
+      username: {{ cloud.get("username", "admin") }}
+      project_name: {{ cloud.get("tenant_name", "admin") }}
       password: {{ cloud.password }}
       auth_url: "{{ cloud.get("protocol", "https") }}://{{ cloud.host }}:{{ cloud.get("port", 5000) }}/v2.0"
 {%- endif %}
