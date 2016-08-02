@@ -90,8 +90,12 @@ EMAIL_USE_SSL = True
 {%- endif %}
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = '{{ app.mail.host }}'
+{%- if app.mail.user is defined %}
 EMAIL_HOST_USER = '{{ app.mail.user }}'
+{%- endif %}
+{%- if app.mail.password is defined %}
 EMAIL_HOST_PASSWORD = '{{ app.mail.password }}'
+{%- endif %}
 EMAIL_PORT = {{ app.mail.get('port', '25') }}
 {%- endif %}
 
