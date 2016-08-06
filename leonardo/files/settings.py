@@ -286,3 +286,7 @@ LEONARDO_CONF_SPEC = {
     'feature_switchers': {},
     'csb_product_backends': []
 }
+
+
+# MOVE this to csb formula
+OSCAR_DEFAULT_CURRENCY = 'CZK'
