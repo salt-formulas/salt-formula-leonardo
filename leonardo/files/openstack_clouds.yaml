@@ -10,6 +10,10 @@ clouds:
       project_name: {{ cloud.get("tenant_name", "admin") }}
       password: {{ cloud.password }}
       auth_url: "{{ cloud.get("protocol", "https") }}://{{ cloud.host }}:{{ cloud.get("port", 5000) }}/v2.0"
+    defaults: {{ cloud.get("defaults", {})|yaml }}
+{%- endif %}
+{%- if cloud.engine == "vmware_vco" %}
+  {{ cloud_name }}: {{ cloud|yaml }}
 {%- endif %}
 {%- endfor %}
 
