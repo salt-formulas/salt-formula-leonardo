@@ -284,7 +284,8 @@ LEONARDO_CONF_SPEC = {
     'store_profile_actions': [],
     'store_actions': [],
     'feature_switchers': {},
-    'csb_product_backends': []
+    'csb_product_backends': [],
+    'csb_plugins': []
 }
 
 
