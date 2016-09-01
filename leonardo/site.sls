@@ -17,6 +17,7 @@ leonardo_source_{{ app_name }}:
   - name: {{ app.source.address }}
   - target: /srv/leonardo/sites/{{ app_name }}/leonardo
   - rev: {{ app.source.get('rev', app.source.get('revision', 'master')) }}
+  - force_reset: True
   - require:
     - file: leonardo_{{ app_name }}_dirs
 {% elif app.source is defined and app.source.engine == 'pip' %}
