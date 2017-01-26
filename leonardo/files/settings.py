@@ -34,6 +34,18 @@ CACHES = {
     }
 }
 
+{%- if app.channels is defined and app.channels.get("engine", "redis") == "redis" %}
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("{{ app.channels.get('host', '127.0.0.1') }}", {{ app.channels.get('port', '6379') }})],
+        },
+        "ROUTING": "leonardo_channels.routes.channel_routing",
+    },
+}
+{%- endif %}
+
 {%- if app.broker is defined and app.broker.engine == 'redis' %}
 BROKER_URL = 'redis://{{ app.broker.host }}:{{ app.broker.port }}/{{ app.broker.number }}'
 CELERY_DEFAULT_QUEUE = "{{ app_name }}"
