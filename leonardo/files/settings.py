@@ -46,6 +46,7 @@ CHANNEL_LAYERS = {
 }
 {%- endif %}
 
+{# To ensure backwards compatibility #}
 {%- if app.broker is defined and app.broker.engine == 'redis' %}
 BROKER_URL = 'redis://{{ app.broker.host }}:{{ app.broker.port }}/{{ app.broker.number }}'
 CELERY_DEFAULT_QUEUE = "{{ app_name }}"
@@ -53,6 +54,26 @@ CELERY_DEFAULT_QUEUE = "{{ app_name }}"
 BROKER_URL = 'amqp://{{ app.broker.user }}:{{ app.broker.password }}@{{ app.broker.host }}:{{ app.broker.get("port",5672) }}/{{ app.broker.virtual_host }}'
 {%- endif %}
 
+{# Cleaner way #}
+{%- if app.celery is defined %}
+
+{%- if app.celery.get('broker', {}).get('engine') == 'redis' %}
+BROKER_URL = "redis://{{ app.celery.broker.get('host', 'localhost') }}:{{ app.celery.broker.get('port', '6379') }}/{{ app.celery.broker.get('database', '1') }}"
+CELERY_DEFAULT_QUEUE = "{{ app.celery.broker.get('default_queue', app_name) }}"
+{%- elif app.celery.get('broker', {}).get('engine') == 'amqp' %}
+BROKER_URL = "amqp://{{ app.celery.broker.get('user', 'guest') }}:{{ app.celery.broker.get('password', 'guest') }}@{{ app.celery.broker.get('host', 'localhost') }}:{{ app.celery.broker.get('port', '5672') }}/{{ app.celery.broker.get('virtual_host', '/') }}"
+CELERY_DEFAULT_QUEUE = "{{ app.celery.broker.get('default_queue', app_name) }}"
+{%- endif %}
+
+{%- if app.celery.get('result_backend').get('engine') == 'redis' %}
+CELERY_RESULT_BACKEND = "redis://{{ app.celery.result_backend.get('host', 'localhost') }}:{{ app.celery.result_backend.get('port', '6379') }}/{{ app.celery.result_backend.get('database', '2') }}"
+{%- elif app.celery.get('result_backend').get('engine') == 'amqp' %}
+CELERY_RESULT_BACKEND = "amqp://{{ app.celery.result_backend.get('user', 'guest') }}:{{ app.celery.result_backend.get('password', 'guest') }}@{{ app.celery.result_backend.get('host', 'localhost') }}:{{ app.celery.result_backend.get('port', '5672') }}/{{ app.celery.result_backend.get('virtual_host', '/') }}"
+{%- elif app.celery.get('result_backend').get('engine') == 'rpc' %}
+CELERY_RESULT_BACKEND = "rpc://{{ app.celery.result_backend.get('user', 'guest') }}:{{ app.celery.result_backend.get('password', 'guest') }}@{{ app.celery.result_backend.get('host', 'localhost') }}:{{ app.celery.result_backend.get('port', '5672') }}/{{ app.celery.result_backend.get('virtual_host', '/') }}"
+{%- endif %}
+
+{%- endif %}
 
 SECRET_KEY = '{{ app.get('secret_key', '87941asd897897asd987') }}'
 
