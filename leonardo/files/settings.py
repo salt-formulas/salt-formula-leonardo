@@ -25,14 +25,31 @@ DATABASES = {
     }
 }
 
+{%- if app.get("cache", {}).get("engine", "memcached") == "memcached" %}
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '{{ app.get("cache", {"host": "127.0.0.1"}).host }}:11211',
+        'LOCATION': '{{ app.get("cache", {}).get("host", "127.0.0.1") }}:11211',
         'TIMEOUT': 120,
-        'KEY_PREFIX': '{{ app.get("cache", {"prefix": "CACHE_"+ app_name|upper}).prefix }}'
+        'KEY_PREFIX': '{{ app.get("cache", {}).get("prefix", "CACHE_"+ app_name|upper) }}'
     }
 }
+{%- elif app.get("cache", {}).get("engine", "memcached") == "redis" %}
+CACHES = {
+    "default": {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://{{ app.get("cache", {}).get("host", "127.0.0.1") }}:{{ app.get("cache", {}).get("port", "6379") }}/{{ app.get("cache", {}).get("database", 1) }}',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient'
+        },
+        'KEY_PREFIX': '{{ app.get("cache", {}).get("prefix", "CACHE_"+ app_name|upper) }}'
+    }
+}
+{%- endif %}
+
+{%- if app.get("session_engine", "cache_db" == "cache") %}
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+{%- endif %}
 
 {%- if app.channels is defined and app.channels.get("engine", "redis") == "redis" %}
 CHANNEL_LAYERS = {
