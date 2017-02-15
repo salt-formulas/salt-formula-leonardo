@@ -25,15 +25,45 @@ DATABASES = {
     }
 }
 
+{%- if app.get("cache", {}).get("engine", "memcached") == "memcached" %}
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '{{ app.get("cache", {"host": "127.0.0.1"}).host }}:11211',
+        'LOCATION': '{{ app.get("cache", {}).get("host", "127.0.0.1") }}:11211',
         'TIMEOUT': 120,
-        'KEY_PREFIX': '{{ app.get("cache", {"prefix": "CACHE_"+ app_name|upper}).prefix }}'
+        'KEY_PREFIX': '{{ app.get("cache", {}).get("prefix", "CACHE_"+ app_name|upper) }}'
     }
 }
+{%- elif app.get("cache", {}).get("engine", "memcached") == "redis" %}
+CACHES = {
+    "default": {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://{{ app.get("cache", {}).get("host", "127.0.0.1") }}:{{ app.get("cache", {}).get("port", "6379") }}/{{ app.get("cache", {}).get("database", 1) }}',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient'
+        },
+        'KEY_PREFIX': '{{ app.get("cache", {}).get("prefix", "CACHE_"+ app_name|upper) }}'
+    }
+}
+{%- endif %}
 
+{%- if app.get("session_engine", "cache_db" == "cache") %}
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+{%- endif %}
+
+{%- if app.channels is defined and app.channels.get("engine", "redis") == "redis" %}
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("{{ app.channels.get('host', '127.0.0.1') }}", {{ app.channels.get('port', '6379') }})],
+        },
+        "ROUTING": "leonardo_channels.routes.channel_routing",
+    },
+}
+{%- endif %}
+
+{# To ensure backwards compatibility #}
 {%- if app.broker is defined and app.broker.engine == 'redis' %}
 BROKER_URL = 'redis://{{ app.broker.host }}:{{ app.broker.port }}/{{ app.broker.number }}'
 CELERY_DEFAULT_QUEUE = "{{ app_name }}"
@@ -41,6 +71,26 @@ CELERY_DEFAULT_QUEUE = "{{ app_name }}"
 BROKER_URL = 'amqp://{{ app.broker.user }}:{{ app.broker.password }}@{{ app.broker.host }}:{{ app.broker.get("port",5672) }}/{{ app.broker.virtual_host }}'
 {%- endif %}
 
+{# Cleaner way #}
+{%- if app.celery is defined %}
+
+{%- if app.celery.get('broker', {}).get('engine') == 'redis' %}
+BROKER_URL = "redis://{{ app.celery.broker.get('host', 'localhost') }}:{{ app.celery.broker.get('port', '6379') }}/{{ app.celery.broker.get('database', '1') }}"
+CELERY_DEFAULT_QUEUE = "{{ app.celery.broker.get('default_queue', app_name) }}"
+{%- elif app.celery.get('broker', {}).get('engine') == 'amqp' %}
+BROKER_URL = "amqp://{{ app.celery.broker.get('user', 'guest') }}:{{ app.celery.broker.get('password', 'guest') }}@{{ app.celery.broker.get('host', 'localhost') }}:{{ app.celery.broker.get('port', '5672') }}/{{ app.celery.broker.get('virtual_host', '/') }}"
+CELERY_DEFAULT_QUEUE = "{{ app.celery.broker.get('default_queue', app_name) }}"
+{%- endif %}
+
+{%- if app.celery.get('result_backend').get('engine') == 'redis' %}
+CELERY_RESULT_BACKEND = "redis://{{ app.celery.result_backend.get('host', 'localhost') }}:{{ app.celery.result_backend.get('port', '6379') }}/{{ app.celery.result_backend.get('database', '2') }}"
+{%- elif app.celery.get('result_backend').get('engine') == 'amqp' %}
+CELERY_RESULT_BACKEND = "amqp://{{ app.celery.result_backend.get('user', 'guest') }}:{{ app.celery.result_backend.get('password', 'guest') }}@{{ app.celery.result_backend.get('host', 'localhost') }}:{{ app.celery.result_backend.get('port', '5672') }}/{{ app.celery.result_backend.get('virtual_host', '/') }}"
+{%- elif app.celery.get('result_backend').get('engine') == 'rpc' %}
+CELERY_RESULT_BACKEND = "rpc://{{ app.celery.result_backend.get('user', 'guest') }}:{{ app.celery.result_backend.get('password', 'guest') }}@{{ app.celery.result_backend.get('host', 'localhost') }}:{{ app.celery.result_backend.get('port', '5672') }}/{{ app.celery.result_backend.get('virtual_host', '/') }}"
+{%- endif %}
+
+{%- endif %}
 
 SECRET_KEY = '{{ app.get('secret_key', '87941asd897897asd987') }}'
 
@@ -90,8 +140,12 @@ EMAIL_USE_SSL = True
 {%- endif %}
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = '{{ app.mail.host }}'
+{%- if app.mail.user is defined %}
 EMAIL_HOST_USER = '{{ app.mail.user }}'
+{%- endif %}
+{%- if app.mail.password is defined %}
 EMAIL_HOST_PASSWORD = '{{ app.mail.password }}'
+{%- endif %}
 EMAIL_PORT = {{ app.mail.get('port', '25') }}
 {%- endif %}
 
@@ -278,5 +332,12 @@ LEONARDO_CONF_SPEC = {
     'dashboard_widgets_available': [],
     'dashboard_widgets': [],
     'store_profile_actions': [],
-    'store_actions': []
+    'store_actions': [],
+    'feature_switchers': {},
+    'csb_product_backends': [],
+    'csb_plugins': []
 }
+
+
+# MOVE this to csb formula
+OSCAR_DEFAULT_CURRENCY = 'CZK'
