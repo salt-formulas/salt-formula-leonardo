@@ -1,0 +1,21 @@
+{%- from "leonardo/map.jinja" import server with context %}
+{%- for app_name, app in server.get('app', {}).iteritems() %}
+{%- if app.service_endpoint is defined %}
+clouds:
+{%- for cloud_name, cloud in app.service_endpoint.iteritems() %}
+{%- if cloud.engine == "openstack" %}
+  {{ cloud_name }}:
+    auth:
+      username: {{ cloud.get("username", "admin") }}
+      project_name: {{ cloud.get("tenant_name", "admin") }}
+      password: {{ cloud.password }}
+      auth_url: "{{ cloud.get("protocol", "https") }}://{{ cloud.host }}:{{ cloud.get("port", 5000) }}/v2.0"
+    defaults: {{ cloud.get("defaults", {})|yaml }}
+{%- endif %}
+{%- if cloud.engine == "vmware_vco" %}
+  {{ cloud_name }}: {{ cloud|yaml }}
+{%- endif %}
+{%- endfor %}
+
+{%- endif %}
+{%- endfor %}
