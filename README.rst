@@ -15,6 +15,8 @@ Sample pillar
           example_app:
             enabled: true
             workers: 3
+            # disable strict host check on nginx proxy at app node
+            dev: true
             bind:
               address: 0.0.0.0 # ${linux:network:fqdn}
               port: 9754
