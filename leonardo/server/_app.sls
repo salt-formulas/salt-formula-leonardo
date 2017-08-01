@@ -1,8 +1,4 @@
 
-{%- from "leonardo/map.jinja" import server with context %}
-
-{%- for app_name, app in server.get('app', {}).iteritems() %}
-
 {%- if app.bind is defined and app.bind.port is defined %}
 {%- set app_bind_port = app.bind.port %}
 {%- else %}
@@ -316,5 +312,3 @@ chown_{{ app_name }}:
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
-
-{%- endfor %}

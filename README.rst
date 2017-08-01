@@ -1,10 +1,12 @@
 
 =======================
-Django-Leonardo Formula
+Django-Leonardo formula
 =======================
 
-Sample pillar
-=============
+Python/django based CMS.
+
+Sample metadata
+===============
 
 .. code-block:: yaml
 
@@ -50,7 +52,8 @@ Sample pillar
 Site Name
 ---------
 
-Without setting formula produce somethink like this ``Example app`` from your site name ``site_name``
+Without setting formula produce somethink like this ``Example app`` from your
+site name ``site_name``
 
 .. code-block:: yaml
 
@@ -286,12 +289,13 @@ will be
 
     App.config will be rendered as python object in ``EXAMPLE_APP_CONFIG = {'app_config': True}``
 
-Read more
-=========
+More information
+================
 
 * https://launchpad.net/~tcpcloud
 * https://github.com/django-leonardo/django-leonardo
 * https://github.com/leonardo-modules/leonardo-auth-ldap
+
 Documentation and Bugs
 ======================
 

@@ -1,7 +1,7 @@
 
 include:
+{% if pillar.leonardo is defined %}
 {% if pillar.leonardo.server is defined %}
 - leonardo.server
-- leonardo.site
-- leonardo.config
+{% endif %}
 {% endif %}
