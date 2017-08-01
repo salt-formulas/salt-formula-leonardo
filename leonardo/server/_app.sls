@@ -279,6 +279,7 @@ restore_leonardo_{{ app_name }}:
     - cmd: sync_all_{{ app_name }}
 
 {%- else %}
+
 /root/leonardo/scripts/restore_{{ app_name }}.sh:
   file:
   - managed
@@ -290,7 +291,6 @@ restore_leonardo_{{ app_name }}:
   - require:
     - file: /root/leonardo/scripts
     - file: /root/leonardo/flags
-    - cmd: migrate_database_{{ app_name }}
 
 restore_leonardo_{{ app_name }}:
   cmd.run:
