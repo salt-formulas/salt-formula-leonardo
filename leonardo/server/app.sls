@@ -7,6 +7,13 @@
 {%- set app = salt['pillar.get']('leonardo:server:app:'+app_name) %}
 {% include "leonardo/server/_app.sls" %}
 
+{%- elif salt['pillar.get']('app_names', False) is iterable %}
+
+{%- for app_name in salt['pillar.get']('app_names') %}
+{%- set app = salt['pillar.get']('leonardo:server:app:'+app_name) %}
+{% include "leonardo/server/_app.sls" %}
+{%- endfor %}
+
 {%- else %}
 
 {%- for app_name, app in server.get('app', {}).iteritems() %}
