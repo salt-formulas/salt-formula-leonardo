@@ -259,7 +259,7 @@ migrate_database_{{ app_name }}:
 
 sync_all_{{ app_name }}:
   cmd.run:
-  - name: 'source /srv/leonardo/sites/{{ app_name }}/bin/activate;rm -r /srv/leonardo/sites/{{ app_name }}/static;/srv/leonardo/sites/{{ app_name }}/bin/python manage.py sync_all;chown leonardo:leonardo ./* -R'
+  - name: 'source /srv/leonardo/sites/{{ app_name }}/bin/activate;rm -r /srv/leonardo/sites/{{ app_name }}/static;/srv/leonardo/sites/{{ app_name }}/bin/python manage.py sync_all -f;chown leonardo:leonardo ./* -R'
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     - file: leonardo_{{ app_name }}_dirs
