@@ -223,7 +223,7 @@ leonardo_site_{{ app_name }}_bootstrap:
 makemigrations_{{ app_name }}:
   cmd.run:
   - names:
-    - source /srv/leonardo/sites/{{ app_name }}/bin/activate; /srv/leonardo/sites/{{ app_name }}/bin/python manage.py makemigrations --merge --noinput
+    - source /srv/leonardo/sites/{{ app_name }}/bin/activate; /srv/leonardo/sites/{{ app_name }}/bin/python manage.py makemigrations --noinput
     - touch /root/leonardo/flags/{{ app_name }}-installed
   - unless: "[ -f /root/leonardo/flags/{{ app_name }}-installed ]"
   - cwd: /srv/leonardo/sites/{{ app_name }}
