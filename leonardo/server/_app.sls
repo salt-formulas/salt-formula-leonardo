@@ -248,7 +248,7 @@ makemigrations_{{ app_name }}:
 
 migrate_database_{{ app_name }}:
   cmd.run:
-  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; /srv/leonardo/sites/{{ app_name }}/bin/python manage.py migrate --noinput
+  - name: source /srv/leonardo/sites/{{ app_name }}/bin/activate; /srv/leonardo/sites/{{ app_name }}/bin/python manage.py migrate auth --noinput; /srv/leonardo/sites/{{ app_name }}/bin/python manage.py migrate sites --noinput; /srv/leonardo/sites/{{ app_name }}/bin/python manage.py migrate web; /srv/leonardo/sites/{{ app_name }}/bin/python manage.py migrate --noinput
   - cwd: /srv/leonardo/sites/{{ app_name }}
   - require:
     {%- if app.get('init', false) %}
