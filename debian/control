@@ -10,6 +10,6 @@ Vcs-Git: https://github.com/django-leonardo/salt-formula-leonardo.git
 
 Package: salt-formula-leonardo
 Architecture: all
-Depends: ${misc:Depends}, salt-master, reclass
+Depends: ${misc:Depends}
 Description: Leonardo CMS Salt formula
  Install and configure Leonardo CMS with multiple sites.
