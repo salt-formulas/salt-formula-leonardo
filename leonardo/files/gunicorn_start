@@ -17,6 +17,8 @@ source /srv/leonardo/sites/{{ app_name }}/bin/activate
 export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
 export PYTHONPATH=$DJANGODIR:$PYTHONPATH
 
+sleep $((RANDOM % 60))
+
 # Start your Django Unicorn
 # Programs meant to be run under supervisor should not daemonize themselves (do not use --daemon)
 exec /srv/leonardo/sites/{{ app_name }}/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
