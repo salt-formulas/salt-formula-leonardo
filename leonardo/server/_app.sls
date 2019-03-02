@@ -23,7 +23,6 @@ leonardo_{{ app_name }}:
   - index_url: {{ index_url }}
   - trusted_host: {{ index_url.replace('https://', '').replace('/simple/', '') }}
   {%- endif %}
-  - process_dependency_links: True
   - pre_releases: True
   - name: django-leonardo
   - bin_env: /srv/leonardo/sites/{{ app_name }}
@@ -48,7 +47,6 @@ pip_{{ app_name }}_extra:
   pip.installed:
   - requirements: salt://leonardo/files/requirements.txt
   - bin_env: /srv/leonardo/sites/{{ app_name }}
-  - process_dependency_links: True
   - require:
     - virtualenv: /srv/leonardo/sites/{{ app_name }}
 
@@ -76,7 +74,6 @@ pip_{{ app_name }}_extra:
   {%- endif %}
   - bin_env: /srv/leonardo/sites/{{ app_name }}
   - exists_action: w
-  - process_dependency_links: True
   - require:
     - virtualenv: /srv/leonardo/sites/{{ app_name }}
 {% endif %}
